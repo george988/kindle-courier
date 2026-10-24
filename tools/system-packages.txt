@@ -1,0 +1,8 @@
+# Debian/Ubuntu packages used by Kindle Courier 2.0.0 (tested on Debian 13: python3 3.13.5, openjdk 21, tesseract 5.5.0)
+# required
+python3 python3-venv curl unzip ca-certificates default-jre-headless poppler-utils fonts-dejavu-core
+# video (ensure_tools.sh --video)
+ffmpeg
+# optional: OCR of text-heavy images (without it, books with images are flagged review_needed) and CJK covers
+tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim fonts-noto-cjk
+# browser for X Articles / JS pages: /usr/bin/google-chrome if present, else playwright's pinned chromium
