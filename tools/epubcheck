@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# epubcheck wrapper (Kindle Courier 2.0.0): runs the pinned epubcheck 5.1.0 jar from $KINDLE_BASE/deps with java.
+# The jar's sha256 is verified against the pinned value; no environment override of the jar. Exit 2 if it cannot run.
+B="${KINDLE_BASE:-/workspace/kindle}"
+J="$B/deps/epubcheck-5.1.0/epubcheck.jar"
+PIN=e03657179297d35885336474b8c7929957e3a073b5b95c6bf8765b9408a0de9f
+JAVA="${JAVA_HOME:+$JAVA_HOME/bin/}java"
+[ -f "$J" ] || { echo "epubcheck.jar not found at $J; run ensure_tools.sh" >&2; exit 2; }
+echo "$PIN  $J" | sha256sum -c --status || { echo "epubcheck.jar sha256 mismatch (expected $PIN)" >&2; exit 2; }
+command -v "$JAVA" >/dev/null 2>&1 || { echo "java not found; run ensure_tools.sh" >&2; exit 2; }
+exec "$JAVA" -jar "$J" "$@"
