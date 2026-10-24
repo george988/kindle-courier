@@ -1,0 +1,5 @@
+# Kindle Courier 2.0.0 pinned binary dependencies: name version url sha256
+pandoc 3.5 https://github.com/jgm/pandoc/releases/download/3.5/pandoc-3.5-linux-amd64.tar.gz a46b448ad9e7e5bd898a0606a2a67acbf4bc7714b24dc68931e9a47d7b807015
+epubcheck 5.1.0 https://github.com/w3c/epubcheck/releases/download/v5.1.0/epubcheck-5.1.0.zip 74a59af8602bf59b1d04266a450d9cdcb5986e36d825adc403cde0d95e88c9e8
+pandoc-bin 3.5 - ff723bb8ac1e19e4ab2d3010fc4fa44c5b08d6630daeb48559553d4dc9ca990e
+epubcheck-jar 5.1.0 - e03657179297d35885336474b8c7929957e3a073b5b95c6bf8765b9408a0de9f
