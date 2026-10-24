@@ -9,9 +9,14 @@ Published to the [public Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwff
 ### Public listing
 
 - Name the public listing **Kindle Courier 2.0.0** while retaining the existing template URL.
-- Use the concise description: “Checked EPUBs from public articles, X posts and videos, plus document forwarding to Kindle. By George Hong (@DomainMaster).”
+- Clarify that video URLs are inputs, web and video content is converted to EPUB, and uploaded PDF, EPUB, and DOCX files are forwarded unchanged by default.
 - Keep release dates and detailed history in this changelog; omit manually maintained dates from the public description.
 - This presentation update leaves the four reviewed skill bodies, pinned source commit, and runtime behavior unchanged.
+
+Public description:
+
+> Send a public article, X post or thread, or video URL—or upload a PDF, EPUB or DOCX file. Kindle Courier turns web and video content into EPUBs, forwards uploaded files unchanged, and emails them to your Kindle address.
+> Created by George Hong (@DomainMaster).
 
 ### Upgrade considerations
 
