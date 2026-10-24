@@ -4,6 +4,8 @@ Turn public articles, X posts and threads, and video transcripts into checked EP
 
 **Current public release: 2.0.0 — October 24, 2026**
 
+Created by [George Hong (@DomainMaster)](https://x.com/DomainMaster).
+
 [Use the Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) · [Release history](CHANGELOG.md)
 
 ## Get started
@@ -89,4 +91,3 @@ GitHub is the source history; x.ai publication is a separate step.
 5. Review the staged version, including all four skill bodies, then **Publish** and verify the public page.
 
 A GitHub documentation edit alone does not update the published template. The 2.0.0 template remains pinned to its reviewed source commit.
-

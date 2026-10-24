@@ -6,6 +6,13 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
 Published to the [public Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) using reviewed source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
 
+### Public listing
+
+- Name the public listing **Kindle Courier 2.0.0** while retaining the existing template URL.
+- Use the concise description: “Checked EPUBs from public articles, X posts and videos, plus document forwarding to Kindle. By George Hong (@DomainMaster).”
+- Keep release dates and detailed history in this changelog; omit manually maintained dates from the public description.
+- This presentation update leaves the four reviewed skill bodies, pinned source commit, and runtime behavior unchanged.
+
 ### Upgrade considerations
 
 - Require CPython 3.13 on Linux x86_64 for the locked runtime.
@@ -76,4 +83,3 @@ The tool checksum-manifest SHA-256 is:
 ```
 
 The x.ai template's four compact skills and the repository's three canonical skills are different distribution forms of the reviewed workflow. GitHub changes require an explicit template update and publication before they reach the public template.
-
