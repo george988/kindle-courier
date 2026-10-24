@@ -1,0 +1,3 @@
+# Video pipeline extras (installed by ensure_tools.sh --video), tested versions.
+yt-dlp==2026.10.21
+faster-whisper==1.2.1
