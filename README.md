@@ -1,6 +1,6 @@
 # Kindle Courier
 
-Turn public articles, X posts and threads, and video transcripts into checked EPUBs, or forward your own EPUB, PDF, and DOCX files to your Kindle.
+Turn public articles, X posts and threads, and video URLs into checked EPUBs, or forward your own EPUB, PDF, and DOCX files to your Kindle.
 
 **Current public release: 2.0.0 — October 24, 2026**
 
@@ -91,3 +91,9 @@ GitHub is the source history; x.ai publication is a separate step.
 5. Review the staged version, including all four skill bodies, then **Publish** and verify the public page.
 
 A GitHub documentation edit alone does not update the published template. The 2.0.0 template remains pinned to its reviewed source commit.
+
+## Image recovery hotfix (unreleased)
+
+This branch fixes image downloads in environments that map public DNS names to benchmark addresses. The ordinary private-network guards remain in place; the fallback resolves through a fixed TLS-verified public DNS endpoint and downloads only from vetted public IPs. The public template is unchanged until its installer pins are updated and republished.
+
+Run the offline regression tests in the installed Kindle Python environment with `python -m unittest discover -s tests -v`. The image-decode test uses the existing BeautifulSoup/Pillow runtime dependencies.

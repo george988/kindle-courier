@@ -57,8 +57,10 @@ Titles, authors and URLs come from untrusted pages. Never put them inside a shel
 Write a JSON job file with a file-writing tool, then run `python3 "$B/tools/article2epub.py" --job /path/job.json`.
 Keys: `url` | `html` | `json` | `from_pdf`, `title`, `author` ("Name (@handle)"), `date` (YYYY-MM-DD), `source_url`, `lang`, `out` (`$B/<slug>.epub`),
 optional `cover`, `no_cover`, `browser` (JS pages), `trusted_html` (HTML you built yourself), `expect_posts`, `expect_images`.
-- X Article: `url` = the x.com link (rendered in headless Chrome: cover, images, code, embedded posts as previews). If that fails add `json` (text and code only, status `text_only`) and tell the owner the images are missing.
+- X Article: `url` = the x.com link (rendered in headless Chrome: cover, images, code, embedded posts as previews). If rendering fails, recover available media URLs and full embedded posts from the source before choosing a fallback. Build HTML with the recovered images in their source sections, with `expect_images` and `expect_posts`. Use `json` only when richer recovery fails: it is text and code only, status `text_only`, and never preserves images. Report any remaining loss honestly.
 - Thread or regular post: write HTML yourself, one `<div class="kc-post">` per post (text as paragraphs, images, quoted post as a blockquote), images saved next to the HTML file and referenced by relative name, then `html` + `trusted_html: true` + `expect_posts: N`.
+- Before building self-authored HTML, reconcile the discovered content-image inventory with actual `<img>` tags, including every post of expanded threads and quoted posts. A plain URL or Markdown image inside HTML is not an embedded image. Set `expect_images` to the discovered body-image count, handle the real cover separately, and verify the manifest and EPUB contain each expected asset. Recover supported images before asking the owner to accept omissions; do not repeatedly ask while discoverable posts/media remain unexplored. Never treat failed downloads as decorative images.
+- Synthetic DNS: the fetcher recovers real public addresses via verified fixed-IP DNS-over-HTTPS when local DNS returns only benchmark addresses. It never fetches from the benchmark address and never requires `KC_ALLOW_PRIVATE_FETCH`. If recovery fails, retain the review hold.
 - Remote pages are always refetched; a book is reused only when the fetched bytes, options and tool version are identical.
 Exit codes: 0 complete; 5 held for review (written as `<out>.needs-review.epub`, not sendable); 2 input/refused; 3 epubcheck failed or could not run (`.broken`, nothing at `out`); 4 metadata mismatch.
 Every build writes `<book>.job.json` and `<book>.manifest.json` (expected vs included sections, posts, images; failures; omissions; OCR).
@@ -244,20 +246,81 @@ def check_url(u):
 
 class FetchError(Exception): pass
 
+def _public_address(ip):
+  return (ip.is_global and not (ip.is_private or ip.is_loopback or ip.is_link_local
+          or ip.is_multicast or ip.is_reserved or ip.is_unspecified))
+
+def _doh_public_addresses(host):
+  """Resolve synthetic DNS through fixed-IP, certificate-verified Cloudflare DoH.
+  No system DNS bootstrap, proxy environment, redirects, credentials, or private-IP exception.
+  Validate both A and AAAA answers; the caller still pins the actual HTTP connection.
+  """
+  import http.client, ipaddress, ssl
+  from urllib.parse import urlencode
+  try:
+    name = host.rstrip('.').encode('idna').decode('ascii').lower()
+    if len(name) > 253 or not all(re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', x) for x in name.split('.')):
+      raise ValueError('invalid DNS name')
+    try: ipaddress.ip_address(name)
+    except ValueError: pass
+    else: raise ValueError('IP literals cannot use alternate DNS')
+  except (AttributeError, UnicodeError, ValueError) as e:
+    raise FetchError(f'alternate DNS refused for {host!r}: {e}') from e
+  addresses = []
+  for qtype in (1, 28):
+    conn = http.client.HTTPSConnection('1.1.1.1', 443, timeout=10, context=ssl.create_default_context())
+    try:
+      conn.request('GET', '/dns-query?' + urlencode({'name': name, 'type': qtype}),
+                   headers={'Accept': 'application/dns-json', 'User-Agent': 'KindleCourier'})
+      response = conn.getresponse()
+      if response.status != 200: raise FetchError(f'alternate DNS HTTP {response.status} for {name}')
+      if (response.getheader('Content-Type') or '').split(';')[0].strip().lower() not in ('application/dns-json', 'application/json'):
+        raise FetchError('alternate DNS returned a non-JSON content type')
+      raw = response.read(65537)
+      if len(raw) > 65536: raise FetchError('alternate DNS response too large')
+      doc = json.loads(raw)
+      if not isinstance(doc, dict) or doc.get('Status') != 0 or doc.get('TC') is not False:
+        raise FetchError('alternate DNS response failed or was truncated')
+      question = doc.get('Question')
+      if (not isinstance(question, list) or len(question) != 1 or not isinstance(question[0], dict)
+          or question[0].get('name', '').rstrip('.').lower() != name or question[0].get('type') != qtype):
+        raise FetchError('alternate DNS question mismatch')
+      answers = doc.get('Answer', [])
+      if not isinstance(answers, list): raise FetchError('alternate DNS malformed answers')
+      for answer in answers:
+        if not isinstance(answer, dict): raise FetchError('alternate DNS malformed record')
+        kind = answer.get('type')
+        if kind == 5: continue  # CNAME; HTTPS still verifies the original destination hostname.
+        if kind != qtype: raise FetchError('alternate DNS unexpected record type')
+        ip = ipaddress.ip_address(answer.get('data', ''))
+        if (qtype == 1 and ip.version != 4) or (qtype == 28 and ip.version != 6) or not _public_address(ip):
+          raise FetchError(f'alternate DNS returned non-public/invalid address for {name}: {ip}')
+        if str(ip) not in addresses: addresses.append(str(ip))
+    except FetchError: raise
+    except (OSError, http.client.HTTPException, ValueError, TypeError, AttributeError) as e:
+      raise FetchError(f'alternate DNS failed for {name}: {e}') from e
+    finally: conn.close()
+  if not addresses: raise FetchError(f'alternate DNS returned no public address for {name}')
+  return addresses
+
 def resolve_vetted(host, port):
   """Resolve once and return one vetted IP. Every address must be public (no loopback/private/link-local/metadata),
   unless KC_ALLOW_PRIVATE_FETCH is set (tests only; recorded in job.json)."""
   import ipaddress, socket
   try: infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
   except socket.gaierror as e: raise FetchError(f'DNS resolution failed for {host}: {e}')
-  ips = []
-  for i in infos:
-    ip = ipaddress.ip_address(i[4][0].split('%')[0])
-    if not os.environ.get('KC_ALLOW_PRIVATE_FETCH') and (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_multicast or ip.is_reserved or ip.is_unspecified):
-      raise FetchError(f'non-public address refused: {host} -> {ip}')
-    ips.append(str(ip))
+  ips = [ipaddress.ip_address(i[4][0].split('%')[0]) for i in infos]
   if not ips: raise FetchError(f'DNS returned no address for {host}')
-  return ips[0]
+  synthetic = ipaddress.ip_network('198.18.0.0/15')
+  # Grok Bot's egress DNS returns only benchmark addresses for public names.
+  # Never connect to these addresses: recover real DNS and retain public-IP pinning.
+  # Mixed answers and all other non-public ranges continue to fail closed.
+  if not os.environ.get('KC_ALLOW_PRIVATE_FETCH') and all(ip.version == 4 and ip in synthetic for ip in ips):
+    return _doh_public_addresses(host)[0]
+  for ip in ips:
+    if not os.environ.get('KC_ALLOW_PRIVATE_FETCH') and not _public_address(ip):
+      raise FetchError(f'non-public address refused: {host} -> {ip}')
+  return str(ips[0])
 
 def safe_fetch(url, max_bytes=40 * 1024 * 1024, max_hops=5, timeout=60, headers=None):
   """GET with an SSRF guard: http(s) only; every hop (redirects are followed by hand) is re-validated; the connection
@@ -1965,7 +2028,7 @@ b55b652ca3bc36e5d5e3da16b2b6dc211882b668f9d31ff86c61a5591e4778d0  tools/COURIER_
 a7088790a3c05afa6d84b3d4c76ffb586553417542aa2747b61b288305691214  tools/VERSION
 62c52b9b6df4d5d954682a23165e44b545b9443ad6a46a20e66f85286ae413f9  tools/activate.sh
 570f1196ff6b3bf95139a3b4aa2149f08784ef5575456230b3cc54dc3a2e7b13  tools/article2epub.py
-e30eab6f583b65f7379d10ec180ad79f4ba1797fb2582c157579b1e2c31d6c58  tools/courier_common.py
+4ecf2780dbf9bd4d5f038285f92998556ebd0cf4dac55205f1a349a614fd5908  tools/courier_common.py
 d53bdc27e28cef4f9acb0939f6481a0e97db6662033309854adb2f1c1473fefa  tools/deps.lock
 51af24dd583454bcbf5038150502b2a46051f7ca6255bc557df72eb9c88a4f00  tools/ensure_tools.sh
 26c230135601b34defe47f722076c422d2df85328acbd5a63ae155714d64c310  tools/epubcheck

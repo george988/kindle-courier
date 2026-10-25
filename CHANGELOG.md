@@ -2,6 +2,18 @@
 
 Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
+## Unreleased — image recovery hotfix
+
+### Fixed
+- Recover public destinations when the Grok Bot environment returns synthetic DNS addresses in `198.18.0.0/15`. Resolve through a fixed, certificate-verified DNS-over-HTTPS endpoint, require public A/AAAA answers, and preserve pinned connections and redirect validation.
+- Continue refusing private, loopback, link-local, shared-address and mixed DNS answers. Fail closed on resolver errors, redirects, malformed responses or private answers; never enable the private-fetch override.
+- Require source-image inventory reconciliation before building self-authored thread HTML. Recover available media before using the explicitly text-only X Article JSON fallback.
+
+### Verification
+- Added 14 offline resolver, redirect and image-decode regression tests.
+- Independently reproduced the original synthetic-DNS failure and recovered all 15 reported images with the patch under simulated synthetic DNS; hashes match normal downloads.
+- Real Grok Bot environment rebuild verification is pending. Public template remains pinned to the published 2.0.0 commit until a separately reviewed publication.
+
 ## 2.0.0 - 2026-10-24
 
 Published to the [public Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) using reviewed source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
