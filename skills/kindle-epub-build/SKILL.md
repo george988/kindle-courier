@@ -8,6 +8,7 @@ description: >-
 # Kindle EPUB build (Kindle Courier 2.0.0)
 
 Base dir: `${KINDLE_BASE:-/workspace/kindle}` (below: `$B`). Tools are in `$B/tools/` (links into `$B/releases/current/tools`).
+Hotfix build directory: `2.0.0-mediafix`. Base tool labels remain 2.0.0; the checksum manifest identifies the patched bytes. This stages a new immutable directory and preserves the original 2.0.0 for rollback.
 The Kindle address and sending account come from memory or the owner, never from these files.
 
 ## What is supported (say so plainly; don't promise "any")
@@ -31,8 +32,8 @@ i = lines.index('### file: tools/rebuild_from_skills.sh') + 2; j = lines.index(F
 open(sys.argv[2], 'w').write('\n'.join(lines[i:j]) + '\n')
 PY
 bash "$R/rebuild_from_skills.sh" "$R/src" "$EPUB_SKILL" "$VIDEO_SKILL"
-bash "$R/src/tools/stage_release.sh" "$R/src" 2.0.0
-bash "$B/releases/activate.sh" 2.0.0
+bash "$R/src/tools/stage_release.sh" "$R/src" 2.0.0-mediafix
+bash "$B/releases/activate.sh" 2.0.0-mediafix
 bash "$B/tools/ensure_tools.sh"
 ```
 Part 2, once, after part 1 and only with addresses the owner gave you (getting-started): (5) write the recipient allowlist, then create the ledger.

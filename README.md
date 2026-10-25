@@ -94,6 +94,6 @@ A GitHub documentation edit alone does not update the published template. The 2.
 
 ## Image recovery hotfix (unreleased)
 
-This branch fixes image downloads in environments that map public DNS names to benchmark addresses. The ordinary private-network guards remain in place; the fallback resolves through a fixed TLS-verified public DNS endpoint and downloads only from vetted public IPs. The public template is unchanged until its installer pins are updated and republished.
+This branch fixes image downloads in environments that map public DNS names to benchmark addresses. The ordinary private-network guards remain in place; the fallback resolves through a fixed TLS-verified public DNS endpoint and downloads only from vetted public IPs. The public template is unchanged until its installer pins are updated and republished. Private hotfix installation uses the separate immutable `2.0.0-mediafix` directory, preserving the original release for rollback; base tool version labels remain 2.0.0 and the changed checksum manifest identifies the patched bytes.
 
 Run the offline regression tests in the installed Kindle Python environment with `python -m unittest discover -s tests -v`. The image-decode test uses the existing BeautifulSoup/Pillow runtime dependencies.
