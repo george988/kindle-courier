@@ -102,7 +102,7 @@ The bot retains the original page capture, separate reconstructed HTML, fetch lo
 
 ## Original diagrams and review evidence
 
-Original diagrams and captions remain intact without supplementary OCR by default. The bot checks their readability, placement and captions, then binds its attestation to the exact embedded-image hashes. After rebuilding, it writes a visual-review receipt for the final EPUB and its actual hash; the temporary inspection copy is only history. If pixels or layout change, it checks them again. Explicitly requested supplementary OCR remains labelled and reviewed.
+Original diagrams and captions remain intact without supplementary OCR by default. The bot checks their readability, placement and captions, then binds its attestation to the exact embedded-image hashes. After rebuilding, it writes a visual-review receipt for the final EPUB and its actual hash; a byte-identical inspection copy is preserved outside builder-managed output before rebuilding and retained as evidence. If pixels or layout change, it checks them again. Explicitly requested supplementary OCR remains labelled and reviewed.
 
 `fetch-log.jsonl`, `source-provenance.json` and `visual-review.json` are evidence that the bot must produce and check through its workflow. The current runtime does not parse or enforce these three receipts. Its existing delivery gates and manifest-bound image attestation remain enforced; receipt files alone do not authorize a send.
 
