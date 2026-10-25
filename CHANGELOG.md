@@ -19,7 +19,7 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
 ### Release packaging
 - Add all four compact public skill bodies, the listing and a hash receipt under `templates/public`.
-- Pin the installer to runtime source `bfa447b8dab60eef49472ca5019198a3ae7efa71`; all 24 anonymous source downloads match their hashes.
+- Pin the installer to runtime source `37c3a740fc585b9baa2a9dd23e3ad213c0a10006`; all 24 anonymous source downloads match their hashes.
 - Align public workflow metadata and the immutable release directory with 2.0.1, removing stale candidate/private labels. Shared CLI/API compatibility remains 2.0.0; exact runtime hashes identify the release.
 - Runtime builder code is byte-identical to the verified private OCR policy patch. Private validation passed 15 regressions and 28 independent cases; two complete real articles passed EPUBCheck 5.1.0 with no fatal errors, errors or warnings.
 - Live delivery passed with a new diagram-rich article: 20/20 sections, 8/8 original diagrams, no supplementary OCR, no owner approval prompt, real EPUBCheck zero errors/warnings, and one verified Sent attachment matching the book. Device arrival is pending owner confirmation.

@@ -110,7 +110,7 @@ Hash checks and EPUBCheck cannot establish whether a diagram is meaningful or le
 
 ## Reviewed 2.0.1 bundle
 
-The four compact bodies, listing and hashes are in [templates/public](templates/public). The installer pins source `bfa447b8dab60eef49472ca5019198a3ae7efa71` and verifies all 24 files. Runtime code matches the verified 2.0.1 deployment; the revised workflow adds page provenance and final-artifact evidence without replacing immutable tool releases. Historical private bodies remain under [templates/private](templates/private) for audit and coordinated rollback only.
+The four compact bodies, listing and hashes are in [templates/public](templates/public). The installer pins source `37c3a740fc585b9baa2a9dd23e3ad213c0a10006` and verifies all 24 files. Runtime code matches the verified 2.0.1 deployment; the revised workflow adds page provenance and final-artifact evidence without replacing immutable tool releases. Historical private bodies remain under [templates/private](templates/private) for audit and coordinated rollback only.
 
 Existing installations should explicitly run the updated installer and load all four matching skills when upgrading. Preserve recipient configuration and delivery history. Never overwrite an existing immutable release directory.
 
