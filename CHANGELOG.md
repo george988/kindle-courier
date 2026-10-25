@@ -13,8 +13,9 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 ### Review findings closed before publication
 - Correct the active video identity and checksum; archive private deployment bodies with an explicit historical-use notice.
 - Document fallback intake for the article page itself, retain a sanitized fetch log, and bind both original page capture and reconstructed build input to source-provenance hashes.
-- Finalize visual-review evidence against the existing final EPUB, manifest and job, retaining the temporary inspection file only as history.
+- Preserve the inspected EPUB outside builder-managed output before the attested rebuild deletes its temporary file. Finalize visual-review evidence against the existing final EPUB, manifest and job, retaining the archived inspection bytes and hash for verification.
 - Align canonical and compact onboarding and clarify current versus historical release documentation.
+- Explicitly distinguish workflow evidence checks from runtime-enforced delivery/image gates, and document a concrete unique inspection-archive path with exclusive creation.
 - Revised workflow verification and saved-skill read-back are pending; publication remains paused.
 
 ### Release packaging

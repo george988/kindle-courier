@@ -104,6 +104,8 @@ The bot retains the original page capture, separate reconstructed HTML, fetch lo
 
 Original diagrams and captions remain intact without supplementary OCR by default. The bot checks their readability, placement and captions, then binds its attestation to the exact embedded-image hashes. After rebuilding, it writes a visual-review receipt for the final EPUB and its actual hash; a byte-identical inspection copy is preserved outside builder-managed output before rebuilding and retained as evidence. If pixels or layout change, it checks them again. Explicitly requested supplementary OCR remains labelled and reviewed.
 
+An inspection archive can use `$B/jobs/<job>/evidence/inspection-<UTCstamp>-<sha12>.epub`, provided the evidence directory is outside that job’s builder-managed output. Create the destination exclusively: if it already exists, choose a new unique name rather than replacing it. Verify the copied bytes before rebuilding and recheck them afterwards. This is one concrete layout for the existing unique-per-job, no-overwrite rule.
+
 `fetch-log.jsonl`, `source-provenance.json` and `visual-review.json` are evidence that the bot must produce and check through its workflow. The current runtime does not parse or enforce these three receipts. Its existing delivery gates and manifest-bound image attestation remain enforced; receipt files alone do not authorize a send.
 
 Hash checks and EPUBCheck cannot establish whether a diagram is meaningful or legible; actual visual inspection remains required. Rebuilding changes content digests, so the bot also checks the source against delivery history before any resend. Existing owner holds are preserved.
