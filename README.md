@@ -2,13 +2,13 @@
 
 Turn public articles, X posts and threads, and video URLs into checked EPUBs, or forward your own EPUB, PDF, and DOCX files to your Kindle.
 
-**Current public release: 2.0.0 — October 24, 2026**
+**Current public release: 2.0.1 — October 25, 2026**
 
-The 2.0.1 runtime is tested and installed on the maintainer’s bot. Its revised public workflow bundle has passed review-closure tests and saved-skill verification; see the [closure record](docs/review-closure-2.0.1.md). Public publication is blocked because the transferred bot’s stored template association returns “Grok Bot template not found.” The existing public URL remains on 2.0.0.
+The reviewed 2.0.1 runtime and four-skill workflow are published through a new template owned by the current account. See the [publication record](docs/publication-2.0.1.md) and [review closure](docs/review-closure-2.0.1.md). The previous 2.0.0 link is superseded; recovery of its broken publishing association is optional.
 
 Created by [George Hong (@DomainMaster)](https://x.com/DomainMaster).
 
-[Use the Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) · [Release history](CHANGELOG.md)
+[Use the Grok Bot template](https://x.ai/bot/XQWWJOzqzWz3ksBfQ8lz0) · [Release history](CHANGELOG.md)
 
 ## Get started
 
@@ -76,9 +76,9 @@ The public template uses four compact skills, tracked in [templates/public](temp
 
 ## Release identity and verification
 
-The published 2.0.0 template installs source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
+The superseded [2.0.0 template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) installs source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
 
-The published 2.0.0 source retained its original `2.0.0-rc1 CANDIDATE` label. This branch prepares a 2.0.1 release with consistent [tools/VERSION](tools/VERSION) and public workflow labels. Its shared CLI/API compatibility version remains 2.0.0; the release directory and exact tool hashes distinguish builds.
+The published 2.0.0 source retained its original `2.0.0-rc1 CANDIDATE` label. The current 2.0.1 release has consistent [tools/VERSION](tools/VERSION) and public workflow labels. Its shared CLI/API compatibility version remains 2.0.0; the release directory and exact tool hashes distinguish builds.
 
 Release verification included 35 passing release tests with real EPUBCheck, an independent rerun, fresh installation and tamper checks, and a non-sending deployment smoke test. All four staged template skill bodies were checked against the reviewed hashes before publication. No real email send or device-arrival test was performed. These are recorded 2.0.0 release checks. The focused OCR regression suite is now in [tests](tests); it uses real Pandoc and mocks EPUBCheck, with real-validator checks performed separately.
 
@@ -89,10 +89,10 @@ GitHub is the source history; x.ai publication is a separate step.
 1. Make and review changes, and add an entry to `CHANGELOG.md`.
 2. Run the relevant build, delivery-gate, installation, and regression checks in an isolated workspace.
 3. Commit the reviewed release source and update the template installer's commit and file-hash pins.
-4. In Grok Bot, use **Share → Update template**. Register any new skill on the bot before staging: the template tool can omit unregistered skills.
+4. In Grok Bot, open **Kindle Courier 2.0.1 Publisher** under its publishing account and use **Share → Update template**. Register any new skill on the bot before staging: the template tool can omit unregistered skills.
 5. Review the staged version, including all four skill bodies, then **Publish** and verify the public page.
 
-A GitHub documentation edit alone does not update the published template. The 2.0.0 template remains pinned to its reviewed source commit.
+A GitHub documentation edit alone does not update the published template. The current template remains pinned to the reviewed 2.0.1 source and skill bodies; the superseded 2.0.0 template remains unchanged.
 
 ## Page and image recovery
 
