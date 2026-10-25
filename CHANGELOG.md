@@ -2,7 +2,23 @@
 
 Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
-## Unreleased — OCR policy and proxy-compatible image recovery
+## 2.0.1 — publication pending
+
+### Fixed
+- Preserve readable original diagrams and captions without adding supplementary OCR by default. The bot performs visual checks and binds them to the embedded image hashes; missing, corrupt or unreadable content still holds.
+- Honor job-file OCR settings, retain body-image resolution within the pixel cap, and reject uniform blank images.
+- Recover public media through Grok Bot's supported normal network path while retaining destination checks and source inventories.
+- Require source and Sent-history checks before resending rebuilt content, since rebuilding changes the content digest. Explicit owner holds remain in force.
+
+### Release packaging
+- Add all four compact public skill bodies, the listing and a hash receipt under `templates/public`.
+- Pin the installer to runtime source `f1baf0f3cd149ce5cb20da61ebe1442254ee1fc5`; all 24 anonymous source downloads match their hashes.
+- Align public workflow metadata and the immutable release directory with 2.0.1, removing stale candidate/private labels. Shared CLI/API compatibility remains 2.0.0; exact runtime hashes identify the release.
+- Runtime builder code is byte-identical to the verified private OCR policy patch. Private validation passed 15 regressions and 28 independent cases; two complete real articles passed EPUBCheck 5.1.0 with no fatal errors, errors or warnings.
+- Live delivery passed with a new diagram-rich article: 20/20 sections, 8/8 original diagrams, no supplementary OCR, no owner approval prompt, real EPUBCheck zero errors/warnings, and one verified Sent attachment matching the book. Device arrival is pending owner confirmation.
+- Independent public-installer review passed fresh/repeat installation and two tamper-refusal cases. Same-URL template publication verification is pending; the public template remains 2.0.0 until complete.
+
+## Private validation history — OCR policy and proxy-compatible image recovery
 
 ### OCR policy correction (2026-10-25; private deployment)
 - Preserve original diagrams and source captions by default without adding supplementary OCR. Require the bot to inspect embedded images for readability; record its attestation in the job and bound manifest rather than asking the owner about optional OCR.
