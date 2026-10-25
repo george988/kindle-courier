@@ -12,7 +12,7 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
 ### Superseded experiment
 - Removed the alternate-DNS code and its tests after the new account's review identified that direct address resolution could bypass its network proxy. Earlier image-recovery tests verified output but did not establish acceptable routing. Do not install the `2.0.0-mediafix` experiment from earlier commits.
-- Proxy-compatible fresh-account installation and EPUB verification are in progress.
+- Verified on a fresh Grok Bot account: fresh and repeat installation succeeded, tampered input was refused, all four saved skill body hashes matched, and the original network refusals remained active. A chart downloaded through the normal proxy was embedded successfully; EPUBCheck returned zero errors or warnings. Independent inspection confirmed EPUB/sidecar hashes, image references and decoded pixels; the genuine OCR hold remained.
 
 ## 2.0.0 - 2026-10-24
 
