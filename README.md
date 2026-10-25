@@ -4,7 +4,7 @@ Turn public articles, X posts and threads, and video URLs into checked EPUBs, or
 
 **Current public release: 2.0.0 — October 24, 2026**
 
-The 2.0.1 runtime is tested and installed on the maintainer’s bot. Its public workflow bundle is undergoing final review closure in GitHub. Public publication is blocked because the transferred bot’s stored template association returns “Grok Bot template not found.” The existing public URL remains on 2.0.0.
+The 2.0.1 runtime is tested and installed on the maintainer’s bot. Its revised public workflow bundle has passed review-closure tests and saved-skill verification; see the [closure record](docs/review-closure-2.0.1.md). Public publication is blocked because the transferred bot’s stored template association returns “Grok Bot template not found.” The existing public URL remains on 2.0.0.
 
 Created by [George Hong (@DomainMaster)](https://x.com/DomainMaster).
 
@@ -116,4 +116,4 @@ The four compact bodies, listing and hashes are in [templates/public](templates/
 
 Existing installations should explicitly run the updated installer and load all four matching skills when upgrading. Preserve recipient configuration and delivery history. Never overwrite an existing immutable release directory.
 
-Validation includes 15 focused regressions, 28 independent adversarial cases, real EPUBCheck on complete article builds, fresh/repeat/tamper installer checks, and one live email with 20 sections and 8 diagrams. Device arrival remains unconfirmed. The latest workflow additions require a fresh non-sending evidence check and saved-skill read-back before publication; status is recorded in the changelog.
+Validation includes 15 focused regressions, 28 independent adversarial cases, real EPUBCheck on complete article builds, fresh/repeat/tamper installer checks, and one live email with 20 sections and 8 diagrams. Device arrival remains unconfirmed. The revised workflows passed a fresh non-sending article check (15 sections, 13 images), a targeted two-pass inspection-archive check, four saved-skill body comparisons, and an idempotent pinned-install rerun. The [closure record](docs/review-closure-2.0.1.md) records exact evidence and limits.

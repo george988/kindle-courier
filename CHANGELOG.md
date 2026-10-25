@@ -16,7 +16,9 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 - Preserve the inspected EPUB outside builder-managed output before the attested rebuild deletes its temporary file. Finalize visual-review evidence against the existing final EPUB, manifest and job, retaining the archived inspection bytes and hash for verification.
 - Align canonical and compact onboarding and clarify current versus historical release documentation.
 - Explicitly distinguish workflow evidence checks from runtime-enforced delivery/image gates, and document a concrete unique inspection-archive path with exclusive creation.
-- Revised workflow verification and saved-skill read-back are pending; publication remains paused.
+- Revised workflow verification passed: 15/15 sections, 13/13 images, OCR off; a targeted two-pass rebuild retained its inspection EPUB and matched all final evidence hashes. All four saved skills match the pinned bundle, and the final installer rerun preserved runtime/configuration/history.
+- Repair the obsolete uniform positive-image test fixture in a maintained copy; preserve blank-image rejection and the original archived release. Both targeted cases pass.
+- All known actionable source/workflow review findings are closed; see [review closure](docs/review-closure-2.0.1.md). Public publication remains paused for the external template-association blocker.
 
 ### Release packaging
 - Add all four compact public skill bodies, the listing and a hash receipt under `templates/public`.
