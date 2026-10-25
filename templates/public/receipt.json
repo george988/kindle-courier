@@ -1,15 +1,16 @@
 {
   "release": "2.0.1",
-  "runtime_commit": "f1baf0f3cd149ce5cb20da61ebe1442254ee1fc5",
+  "runtime_commit": "90c2fa298843f8a5c5d619b2a90754674d619066",
   "release_directory": "2.0.1",
   "api_compatibility_version": "2.0.0",
   "manifest_sha256": "df03e6204a62aed3f455e73db9c023ac7ab8ebbd076ee5fd1bd1c793b9a569cf",
   "article_builder_sha256": "121c37e15fcb80691b431b4eda54772bc98d25fb8a2549129d205a7242911fd5",
-  "scope": "Public template update candidate. No user-specific configuration, memory, files, recipients or delivery history.",
+  "scope": "Public 2.0.1 candidate with page-fetch provenance and final-artifact review receipts. Runtime tools unchanged from the verified 2.0.1 deployment. No private state.",
   "skills": {
-    "kindle-courier-getting-started.body.md": "608589005a0fa1517602b4af97f5f175784f60bb3058c58492496593284519eb",
-    "kindle-courier-install.body.md": "13a6bc2e0d607401c951987bb3415517c85b79a1419522f1748fbcf4ccbd17b3",
-    "kindle-epub-build.body.md": "0b6fec55ff4d2c90e97b1742bf46fb30b9de8c0c85c99d02beb381ee4acb143c",
+    "kindle-courier-getting-started.body.md": "a4b547e8bc0f40ce6f7d3dfc9e38f2501215285a02e07ae8754dc291d4faa764",
+    "kindle-courier-install.body.md": "5dd6267acd9ec42f466b73b9016194fb00024ba2b6ca5fe17c462eb556ccb16e",
+    "kindle-epub-build.body.md": "0534a5835ebac01071654a45085bde4d85b09c04337e0572ca1168a6f49b765b",
     "kindle-video-build.body.md": "7395e83b493edf9d74dfd55af8a73458de6c548a07aa6cbb5b5a0240196bb3ac"
-  }
+  },
+  "workflow_revision": "2026-10-25-review-closure"
 }

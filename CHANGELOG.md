@@ -10,9 +10,16 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 - Recover public media through Grok Bot's supported normal network path while retaining destination checks and source inventories.
 - Require source and Sent-history checks before resending rebuilt content, since rebuilding changes the content digest. Explicit owner holds remain in force.
 
+### Review findings closed before publication
+- Correct the active video identity and checksum; archive private deployment bodies with an explicit historical-use notice.
+- Document fallback intake for the article page itself, retain a sanitized fetch log, and bind both original page capture and reconstructed build input to source-provenance hashes.
+- Finalize visual-review evidence against the existing final EPUB, manifest and job, retaining the temporary inspection file only as history.
+- Align canonical and compact onboarding and clarify current versus historical release documentation.
+- Revised workflow verification and saved-skill read-back are pending; publication remains paused.
+
 ### Release packaging
 - Add all four compact public skill bodies, the listing and a hash receipt under `templates/public`.
-- Pin the installer to runtime source `f1baf0f3cd149ce5cb20da61ebe1442254ee1fc5`; all 24 anonymous source downloads match their hashes.
+- Pin the installer to runtime source `90c2fa298843f8a5c5d619b2a90754674d619066`; all 24 anonymous source downloads match their hashes.
 - Align public workflow metadata and the immutable release directory with 2.0.1, removing stale candidate/private labels. Shared CLI/API compatibility remains 2.0.0; exact runtime hashes identify the release.
 - Runtime builder code is byte-identical to the verified private OCR policy patch. Private validation passed 15 regressions and 28 independent cases; two complete real articles passed EPUBCheck 5.1.0 with no fatal errors, errors or warnings.
 - Live delivery passed with a new diagram-rich article: 20/20 sections, 8/8 original diagrams, no supplementary OCR, no owner approval prompt, real EPUBCheck zero errors/warnings, and one verified Sent attachment matching the book. Device arrival is pending owner confirmation.
@@ -118,9 +125,9 @@ Public description:
 
 ### Release provenance
 
-The reviewed RC1 tool bytes were activated and published as 2.0.0 without modification. Consequently, `tools/VERSION` still reads `2.0.0-rc1 CANDIDATE`.
+The reviewed RC1 tool bytes were activated and published as 2.0.0 without modification. At the published 2.0.0 source commit, `tools/VERSION` reads `2.0.0-rc1 CANDIDATE`. This is historical provenance; the current 2.0.1 candidate uses its own label and checksum below in `templates/public/receipt.json`.
 
-The tool checksum-manifest SHA-256 is:
+The historical 2.0.0 tool checksum-manifest SHA-256 is:
 
 ```text
 50536751e621c149e3caf8ff9ed0d578aed177816d93920de92c51cbb9585807
