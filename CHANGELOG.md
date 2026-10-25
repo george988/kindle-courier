@@ -12,7 +12,9 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 ### Verification
 - Added 14 offline resolver, redirect and image-decode regression tests.
 - Independently reproduced the original synthetic-DNS failure and recovered all 15 reported images with the patch under simulated synthetic DNS; hashes match normal downloads.
-- Real Grok Bot environment rebuild verification is pending. Public template remains pinned to the published 2.0.0 commit until a separately reviewed publication.
+- Verified in the real Grok Bot environment: all 14 new tests passed and all 15 unique source assets downloaded without the private-fetch override. The existing suite passed 33/34 initially; its sole checksum-related failure passed when rerun with the updated manifest.
+- Independently inspected both rebuilt EPUBs: the article contains all 13 body images plus its cover; the Jason thread contains its photo. Both have zero EPUBCheck errors or warnings. The article still correctly requires review for three omitted videos and machine OCR.
+- Public template remains pinned to the published 2.0.0 commit until a separately reviewed publication.
 
 ## 2.0.0 - 2026-10-24
 
