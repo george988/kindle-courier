@@ -4,7 +4,7 @@ description: >-
   Kindle Courier only: turn a public video link (X, YouTube or another yt-dlp-supported site) into a transcript EPUB
   from captions or, failing that, faster-whisper speech-to-text. Text only: the visuals are not in the book.
 ---
-# Kindle video build (Kindle Courier 2.0.0)
+# Kindle video build (Kindle Courier 2.0.1)
 
 Base dir `${KINDLE_BASE:-/workspace/kindle}` (`$B`). Requires `bash "$B/tools/ensure_tools.sh" --video` first (yt-dlp, faster-whisper and ffmpeg are checked inside the venv).
 
@@ -15,7 +15,7 @@ Base dir `${KINDLE_BASE:-/workspace/kindle}` (`$B`). Requires `bash "$B/tools/en
 
 Caches are keyed by the video's identity, language, model, captions mode and tool version, and checked before reuse, so different videos never share files even with the same or all-Chinese titles.
 
-## Embedded files (byte-identical to the 2.0.0 tools)
+## Embedded files (byte-identical to the 2.0.1 release tools)
 
 ### file: tools/video2epub.py
 ````python
