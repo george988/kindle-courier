@@ -1,0 +1,15 @@
+{
+  "supersedes": "private-hotfix-pack.zip; DO NOT INSTALL the alternate-DNS build",
+  "runtime_commit": "d1c93402491fcb751b5b0aa52d41569b89714956",
+  "release_directory": "2.0.0-ocrpolicy1",
+  "source_sha256": "e30eab6f583b65f7379d10ec180ad79f4ba1797fb2582c157579b1e2c31d6c58",
+  "manifest_sha256": "37602092cc42ad630caf14921fa6a3c9c264a72d246f78e9a22df8fd521ebed9",
+  "scope": "Private OCR policy patch and supported media recovery. Original network and delivery tools unchanged. No public template publication or email sending.",
+  "skills": {
+    "kindle-courier-getting-started.body.md": "d7bb3f7375f851215502f86ad3e7fb3dda49f3011f885fbf4f4c3c680b6b183c",
+    "kindle-courier-install.body.md": "506231623ec7f785107033ec756417da1e3e044c9fbeda7674be406749567ddd",
+    "kindle-video-build.body.md": "2a1b115076976b4edfabe63bc2b160ee0db01d9ea970f4c74e0e0db3b803b562",
+    "kindle-epub-build.body.md": "7e4a29849eaf3a8b5924ec94011aee1bccae5e94f54a7f9c92a9bef4c7965415"
+  },
+  "article_builder_sha256": "121c37e15fcb80691b431b4eda54772bc98d25fb8a2549129d205a7242911fd5"
+}

@@ -1,0 +1,16 @@
+{
+  "release": "2.0.1",
+  "runtime_commit": "37c3a740fc585b9baa2a9dd23e3ad213c0a10006",
+  "release_directory": "2.0.1",
+  "api_compatibility_version": "2.0.0",
+  "manifest_sha256": "df03e6204a62aed3f455e73db9c023ac7ab8ebbd076ee5fd1bd1c793b9a569cf",
+  "article_builder_sha256": "121c37e15fcb80691b431b4eda54772bc98d25fb8a2549129d205a7242911fd5",
+  "scope": "Public 2.0.1 candidate with page provenance and retained inspection/final artifact evidence. Runtime tools unchanged from verified 2.0.1 deployment. No private state.",
+  "skills": {
+    "kindle-courier-getting-started.body.md": "a4b547e8bc0f40ce6f7d3dfc9e38f2501215285a02e07ae8754dc291d4faa764",
+    "kindle-courier-install.body.md": "d12c6b130eee677b512b6ca59b7d417c92fdc70111ef0648331b74827ffd67a3",
+    "kindle-epub-build.body.md": "6e86cddee81c1a10463038ade25c81b8e3a436043d88f82f123adc313513334f",
+    "kindle-video-build.body.md": "7395e83b493edf9d74dfd55af8a73458de6c548a07aa6cbb5b5a0240196bb3ac"
+  },
+  "workflow_revision": "2026-10-25-review-closure-preserved-inspection"
+}

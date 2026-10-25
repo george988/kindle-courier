@@ -19,7 +19,7 @@ Tell them what to expect: books that miss something (images, sections, video) ar
 
 Save to memory: the Kindle addresses with device names, the default, the sending account, the permission answer, and that the approved-sender reminder was given.
 
-Then set up, in this order (kindle-epub-build section 0):
-1. If `${KINDLE_BASE:-/workspace/kindle}/tools/presend_gate.py` is missing, run section 0 part 1 (creates the base, rebuilds and verifies the tools, stages and activates them, installs the runtime). Otherwise run `bash "${KINDLE_BASE:-/workspace/kindle}/tools/ensure_tools.sh"`.
+Then set up Kindle Courier 2.0.1, in this order (kindle-epub-build section 0):
+1. In the public template, run kindle-courier-install first: it verifies the pinned 2.0.1 release, stages and activates it, and installs the runtime. Rerunning verifies an existing 2.0.1 without overwriting it. For a canonical-only setup without that compact installer, use the canonical kindle-epub-build section 0 part 1 and its embedded, checksum-verified tools instead. Stop on any verification failure.
 2. Run section 0 part 2 with exactly the addresses the owner gave (KINDLE_ADDRESS, DEVICE_LABEL; one entry per device), read the list back to them, and let it create the ledger. The gate sends only to these addresses; change the list only when the owner asks.
 Offer a test: "send me a link and i'll make your first book." Make no routines; this bot works when a link arrives.

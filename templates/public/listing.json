@@ -1,0 +1,10 @@
+{
+  "name": "Kindle Courier 2.0.1",
+  "existing_url": "https://x.ai/bot/LXZMn9iFYykfjhOdwffV6",
+  "description": "Send a public article, X post or thread, or video URL—or upload a PDF, EPUB or DOCX file. Kindle Courier turns web and video content into EPUBs, forwards uploaded files unchanged, and emails them to your Kindle address.\nCreated by George Hong (@DomainMaster).",
+  "integrations": [
+    "Gmail"
+  ],
+  "include_memory": false,
+  "include_routines": false
+}

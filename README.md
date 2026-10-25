@@ -1,8 +1,10 @@
 # Kindle Courier
 
-Turn public articles, X posts and threads, and video transcripts into checked EPUBs, or forward your own EPUB, PDF, and DOCX files to your Kindle.
+Turn public articles, X posts and threads, and video URLs into checked EPUBs, or forward your own EPUB, PDF, and DOCX files to your Kindle.
 
 **Current public release: 2.0.0 — October 24, 2026**
+
+The 2.0.1 runtime is tested and installed on the maintainer’s bot. Its revised public workflow bundle has passed review-closure tests and saved-skill verification; see the [closure record](docs/review-closure-2.0.1.md). Public publication is blocked because the transferred bot’s stored template association returns “Grok Bot template not found.” The existing public URL remains on 2.0.0.
 
 Created by [George Hong (@DomainMaster)](https://x.com/DomainMaster).
 
@@ -38,9 +40,9 @@ Example requests:
 
 Paywalled, private, login-only, and interaction-dependent pages are outside the supported workflow. Video books do not reproduce the full visual content of a video. OCR and speech transcription can contain errors.
 
-## What 2.0.0 checks
+## What the reviewed 2.0.1 workflow checks
 
-- **Book validity and completeness:** generated EPUBs pass EPUBCheck and metadata checks. Missing sections or images, OCR output, and other review conditions hold the book for owner review.
+- **Book validity and completeness:** generated EPUBs pass EPUBCheck and metadata checks. Missing or unreadable source content and unreliable requested OCR hold the book for owner review. Readable original diagrams are preserved without adding OCR by default; the bot checks them itself.
 - **Source and cache identity:** cache keys incorporate source identity, content, options, and tool information to reduce collisions and stale reuse.
 - **Recipient and attachment checks:** a pre-send gate checks the approved recipient, file type, size, and recorded content identity. Each send contains one file.
 - **Duplicate and uncertain sends:** a SQLite ledger reserves deliveries atomically. An uncertain send is held for reconciliation rather than retried automatically.
@@ -57,7 +59,7 @@ The installer downloads **24 files** from a fixed GitHub commit: 20 tool files, 
 
 The supported runtime is **CPython 3.13 on Linux x86_64**. Setup requires network access to GitHub and dependency sources, plus permission to install the required runtime components. Pandoc 3.5 and EPUBCheck 5.1.0 are hash-pinned; Python packages use hash-locked requirements. System packages and the Playwright browser download are not fully pinned.
 
-The default bot workspace is `/workspace/kindle`; `KINDLE_BASE` can select a different base. This release is not a supported native macOS or Windows installation.
+The default bot workspace is `/workspace/kindle`; `KINDLE_BASE` can select a different base. This release is not a supported native macOS or Windows installation. Release directory labels must match `X.Y.Z` or `X.Y.Z-suffix`; the staging helper permits one optional suffix, not multiple hyphen-separated suffixes.
 
 ## Repository layout
 
@@ -70,15 +72,15 @@ The default bot workspace is `/workspace/kindle`; `KINDLE_BASE` can select a dif
 | [skills/kindle-video-build/](skills/kindle-video-build/) | Canonical video workflow and embedded video tool. |
 | [CHANGELOG.md](CHANGELOG.md) | User-facing release history. |
 
-The public template uses four compact skills. This repository contains the three larger canonical skills they install from; the compact installer is distributed in the x.ai template.
+The public template uses four compact skills, tracked in [templates/public](templates/public). Three canonical workflows under [skills](skills) include the embedded runtime sources. The installer and checksum receipt bind the distribution forms to the same reviewed release.
 
 ## Release identity and verification
 
 The published 2.0.0 template installs source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
 
-The preserved [tools/VERSION](tools/VERSION) file reads `2.0.0-rc1 CANDIDATE`. Those exact reviewed bytes were subsequently activated and published as 2.0.0; the label was retained to preserve their hashes.
+The published 2.0.0 source retained its original `2.0.0-rc1 CANDIDATE` label. This branch prepares a 2.0.1 release with consistent [tools/VERSION](tools/VERSION) and public workflow labels. Its shared CLI/API compatibility version remains 2.0.0; the release directory and exact tool hashes distinguish builds.
 
-Release verification included 35 passing release tests with real EPUBCheck, an independent rerun, fresh installation and tamper checks, and a non-sending deployment smoke test. All four staged template skill bodies were checked against the reviewed hashes before publication. No real email send or device-arrival test was performed. These are recorded release checks; the public repository does not yet contain the test suite or automated CI.
+Release verification included 35 passing release tests with real EPUBCheck, an independent rerun, fresh installation and tamper checks, and a non-sending deployment smoke test. All four staged template skill bodies were checked against the reviewed hashes before publication. No real email send or device-arrival test was performed. These are recorded 2.0.0 release checks. The focused OCR regression suite is now in [tests](tests); it uses real Pandoc and mocks EPUBCheck, with real-validator checks performed separately.
 
 ## Maintaining the public template
 
@@ -91,3 +93,27 @@ GitHub is the source history; x.ai publication is a separate step.
 5. Review the staged version, including all four skill bodies, then **Publish** and verify the public page.
 
 A GitHub documentation edit alone does not update the published template. The 2.0.0 template remains pinned to its reviewed source commit.
+
+## Page and image recovery
+
+In some Grok Bot environments, public hostnames resolve to synthetic proxy addresses that the strict downloader refuses. The workflow retains that refusal and uses the platform-supported normal-network downloader or browser for the page and its public images. It does not change DNS, proxies or destination guards.
+
+The bot retains the original page capture, separate reconstructed HTML, fetch log, source provenance and image inventory. It records the actual URL, available response metadata, local paths and byte hashes, then reconciles the source sections, text and images with the book. Unavailable or unreadable source content still holds.
+
+## Original diagrams and review evidence
+
+Original diagrams and captions remain intact without supplementary OCR by default. The bot checks their readability, placement and captions, then binds its attestation to the exact embedded-image hashes. After rebuilding, it writes a visual-review receipt for the final EPUB and its actual hash; a byte-identical inspection copy is preserved outside builder-managed output before rebuilding and retained as evidence. If pixels or layout change, it checks them again. Explicitly requested supplementary OCR remains labelled and reviewed.
+
+An inspection archive can use `$B/jobs/<job>/evidence/inspection-<UTCstamp>-<sha12>.epub`, provided the evidence directory is outside that job’s builder-managed output. Create the destination exclusively: if it already exists, choose a new unique name rather than replacing it. Verify the copied bytes before rebuilding and recheck them afterwards. This is one concrete layout for the existing unique-per-job, no-overwrite rule.
+
+`fetch-log.jsonl`, `source-provenance.json` and `visual-review.json` are evidence that the bot must produce and check through its workflow. The current runtime does not parse or enforce these three receipts. Its existing delivery gates and manifest-bound image attestation remain enforced; receipt files alone do not authorize a send.
+
+Hash checks and EPUBCheck cannot establish whether a diagram is meaningful or legible; actual visual inspection remains required. Rebuilding changes content digests, so the bot also checks the source against delivery history before any resend. Existing owner holds are preserved.
+
+## Reviewed 2.0.1 bundle
+
+The four compact bodies, listing and hashes are in [templates/public](templates/public). The installer pins source `37c3a740fc585b9baa2a9dd23e3ad213c0a10006` and verifies all 24 files. Runtime code matches the verified 2.0.1 deployment; the revised workflow adds page provenance and final-artifact evidence without replacing immutable tool releases. Historical private bodies remain under [templates/private](templates/private) for audit and coordinated rollback only.
+
+Existing installations should explicitly run the updated installer and load all four matching skills when upgrading. Preserve recipient configuration and delivery history. Never overwrite an existing immutable release directory.
+
+Validation includes 15 focused regressions, 28 independent adversarial cases, real EPUBCheck on complete article builds, fresh/repeat/tamper installer checks, and one live email with 20 sections and 8 diagrams. Device arrival remains unconfirmed. The revised workflows passed a fresh non-sending article check (15 sections, 13 images), a targeted two-pass inspection-archive check, four saved-skill body comparisons, and an idempotent pinned-install rerun. The [closure record](docs/review-closure-2.0.1.md) records exact evidence and limits.

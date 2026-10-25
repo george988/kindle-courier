@@ -2,6 +2,55 @@
 
 Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
+## 2.0.1 — publication pending
+
+### Fixed
+- Preserve readable original diagrams and captions without adding supplementary OCR by default. The bot performs visual checks and binds them to the embedded image hashes; missing, corrupt or unreadable content still holds.
+- Honor job-file OCR settings, retain body-image resolution within the pixel cap, and reject uniform blank images.
+- Recover public media through Grok Bot's supported normal network path while retaining destination checks and source inventories.
+- Require source and Sent-history checks before resending rebuilt content, since rebuilding changes the content digest. Explicit owner holds remain in force.
+
+### Review findings closed before publication
+- Correct the active video identity and checksum; archive private deployment bodies with an explicit historical-use notice.
+- Document fallback intake for the article page itself, retain a sanitized fetch log, and bind both original page capture and reconstructed build input to source-provenance hashes.
+- Preserve the inspected EPUB outside builder-managed output before the attested rebuild deletes its temporary file. Finalize visual-review evidence against the existing final EPUB, manifest and job, retaining the archived inspection bytes and hash for verification.
+- Align canonical and compact onboarding and clarify current versus historical release documentation.
+- Explicitly distinguish workflow evidence checks from runtime-enforced delivery/image gates, and document a concrete unique inspection-archive path with exclusive creation.
+- Revised workflow verification passed: 15/15 sections, 13/13 images, OCR off; a targeted two-pass rebuild retained its inspection EPUB and matched all final evidence hashes. All four saved skills match the pinned bundle, and the final installer rerun preserved runtime/configuration/history.
+- Repair the obsolete uniform positive-image test fixture in a maintained copy; preserve blank-image rejection and the original archived release. Both targeted cases pass.
+- All known actionable source/workflow review findings are closed; see [review closure](docs/review-closure-2.0.1.md). Public publication remains paused for the external template-association blocker.
+
+### Release packaging
+- Add all four compact public skill bodies, the listing and a hash receipt under `templates/public`.
+- Pin the installer to runtime source `37c3a740fc585b9baa2a9dd23e3ad213c0a10006`; all 24 anonymous source downloads match their hashes.
+- Align public workflow metadata and the immutable release directory with 2.0.1, removing stale candidate/private labels. Shared CLI/API compatibility remains 2.0.0; exact runtime hashes identify the release.
+- Runtime builder code is byte-identical to the verified private OCR policy patch. Private validation passed 15 regressions and 28 independent cases; two complete real articles passed EPUBCheck 5.1.0 with no fatal errors, errors or warnings.
+- Live delivery passed with a new diagram-rich article: 20/20 sections, 8/8 original diagrams, no supplementary OCR, no owner approval prompt, real EPUBCheck zero errors/warnings, and one verified Sent attachment matching the book. Device arrival is pending owner confirmation.
+- Independent public-installer review passed fresh/repeat installation and two tamper-refusal cases. Live 2.0.1 installation verified all 24 pins and four saved skill bodies while preserving recipient configuration and delivery history.
+- Public publication is blocked: the transferred bot’s host-managed template association returns “Grok Bot template not found.” No draft or replacement template was created. The existing public URL remains on 2.0.0; update it from the original publishing bot/account or restore the association before publication.
+
+## Private validation history — OCR policy and proxy-compatible image recovery
+
+### OCR policy correction (2026-10-25; private deployment)
+- Preserve original diagrams and source captions by default without adding supplementary OCR. Require the bot to inspect embedded images for readability; record its attestation in the job and bound manifest rather than asking the owner about optional OCR.
+- Keep missing/corrupt/unreadable images, omitted content, explicit transcription requests and all existing delivery checks blocking. Historical sends and explicit owner holds are unchanged.
+- Bind image review to exact embedded-image SHA256 values, record native/embedded sizes, reject uniform blank images and retain body-image resolution up to 40 million pixels.
+- Fix job-file `ocr` settings being masked by the command-line parser's default; reject invalid job OCR values.
+- Track this private runtime as `2.0.0-ocrpolicy1`; API version stays 2.0.0 and job identity includes exact tool hashes. Public x.ai template remains at the published source until separately updated.
+- Added 15 regression tests using real Pandoc and a mocked EPUBCheck; all passed locally and remotely. Independent review passed 28 adversarial cases. Two real article rebuilds retained all sections/images without supplementary OCR and passed EPUBCheck 5.1.0 with zero fatal errors, errors or warnings.
+- Verified private live installation and exact saved skill bodies; fresh/repeat installs passed and tampered input was refused. Moved four stale transferred skill copies intact to backup and confirmed a fresh catalog load no longer lists them. No emails were sent, and existing delivery history, owner holds and book files were preserved.
+- Visual readability still requires actual bot inspection. Rebuilt content has a new digest, so source/history checks remain necessary before any resend. Historical video-skill metadata remains a cleanup item for the next public release.
+
+### Changed
+- Recover public images through the platform's supported normal-network downloader/browser, then validate and embed local assets using the existing builder.
+- Record source URL, local filename, byte count, dimensions, hash and source placement. Reconcile source inventory, parsed HTML, manifest and EPUB instead of counting lines or assuming remote images were embedded.
+- Attempt supported recovery before asking the owner to accept missing images; retain genuine video/OCR and unavailable-content holds.
+- The original media-recovery change kept runtime bytes unchanged; the subsequent private OCR policy patch below changes only the article builder and variant label. Network and delivery tools remain unchanged. Private setup bodies and hashes are tracked under `templates/private`; public template unchanged.
+
+### Superseded experiment
+- Removed the alternate-DNS code and its tests after the new account's review identified that direct address resolution could bypass its network proxy. Earlier image-recovery tests verified output but did not establish acceptable routing. Do not install the `2.0.0-mediafix` experiment from earlier commits.
+- Verified on a fresh Grok Bot account: fresh and repeat installation succeeded, tampered input was refused, all four saved skill body hashes matched, and the original network refusals remained active. A chart downloaded through the normal proxy was embedded successfully; EPUBCheck returned zero errors or warnings. Independent inspection confirmed EPUB/sidecar hashes, image references and decoded pixels; the genuine OCR hold remained.
+
 ## 2.0.0 - 2026-10-24
 
 Published to the [public Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) using reviewed source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
@@ -79,9 +128,9 @@ Public description:
 
 ### Release provenance
 
-The reviewed RC1 tool bytes were activated and published as 2.0.0 without modification. Consequently, `tools/VERSION` still reads `2.0.0-rc1 CANDIDATE`.
+The reviewed RC1 tool bytes were activated and published as 2.0.0 without modification. At the published 2.0.0 source commit, `tools/VERSION` reads `2.0.0-rc1 CANDIDATE`. This is historical provenance; the current 2.0.1 candidate uses its own label and checksum below in `templates/public/receipt.json`.
 
-The tool checksum-manifest SHA-256 is:
+The historical 2.0.0 tool checksum-manifest SHA-256 is:
 
 ```text
 50536751e621c149e3caf8ff9ed0d578aed177816d93920de92c51cbb9585807
