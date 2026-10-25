@@ -4,7 +4,7 @@ Turn public articles, X posts and threads, and video URLs into checked EPUBs, or
 
 **Current public release: 2.0.0 — October 24, 2026**
 
-2.0.1 is staged in GitHub for live delivery and public-template verification; it is not yet published in Grok Bot.
+2.0.1 is tested and installed on the maintainer’s bot, with its public bundle ready in GitHub. Public publication is blocked because the transferred bot’s stored template association returns “Grok Bot template not found.” The existing public URL remains on 2.0.0.
 
 Created by [George Hong (@DomainMaster)](https://x.com/DomainMaster).
 

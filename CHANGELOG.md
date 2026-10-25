@@ -16,7 +16,8 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 - Align public workflow metadata and the immutable release directory with 2.0.1, removing stale candidate/private labels. Shared CLI/API compatibility remains 2.0.0; exact runtime hashes identify the release.
 - Runtime builder code is byte-identical to the verified private OCR policy patch. Private validation passed 15 regressions and 28 independent cases; two complete real articles passed EPUBCheck 5.1.0 with no fatal errors, errors or warnings.
 - Live delivery passed with a new diagram-rich article: 20/20 sections, 8/8 original diagrams, no supplementary OCR, no owner approval prompt, real EPUBCheck zero errors/warnings, and one verified Sent attachment matching the book. Device arrival is pending owner confirmation.
-- Independent public-installer review passed fresh/repeat installation and two tamper-refusal cases. Same-URL template publication verification is pending; the public template remains 2.0.0 until complete.
+- Independent public-installer review passed fresh/repeat installation and two tamper-refusal cases. Live 2.0.1 installation verified all 24 pins and four saved skill bodies while preserving recipient configuration and delivery history.
+- Public publication is blocked: the transferred bot’s host-managed template association returns “Grok Bot template not found.” No draft or replacement template was created. The existing public URL remains on 2.0.0; update it from the original publishing bot/account or restore the association before publication.
 
 ## Private validation history — OCR policy and proxy-compatible image recovery
 
