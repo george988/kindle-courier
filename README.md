@@ -92,8 +92,8 @@ GitHub is the source history; x.ai publication is a separate step.
 
 A GitHub documentation edit alone does not update the published template. The 2.0.0 template remains pinned to its reviewed source commit.
 
-## Image recovery hotfix (unreleased)
+## Image recovery workflow (unreleased)
 
-This branch fixes image downloads in environments that map public DNS names to benchmark addresses. The ordinary private-network guards remain in place; the fallback resolves through a fixed TLS-verified public DNS endpoint and downloads only from vetted public IPs. The public template is unchanged until its installer pins are updated and republished. Private hotfix installation uses the separate immutable `2.0.0-mediafix` directory, preserving the original release for rollback; base tool version labels remain 2.0.0 and the changed checksum manifest identifies the patched bytes.
+In Grok Bot, public hostnames may resolve to a synthetic network-proxy address that the strict tool downloader refuses. The revised private workflow uses the platform's supported normal-network download path, validates and inventories the returned images, then supplies local assets to the existing builder. All original runtime tools and their checksum manifest remain unchanged. Missing media and other completeness warnings remain review conditions.
 
-Run the offline regression tests in the installed Kindle Python environment with `python -m unittest discover -s tests -v`. The image-decode test uses the existing BeautifulSoup/Pillow runtime dependencies.
+The four reviewed private setup bodies and their hashes are in [templates/private](templates/private). Its installer pins the original audited runtime commit `72af6bb9584bec6348ec08863442699fb1c39f80`; only the EPUB workflow differs from the public template. Public publication is separate. The earlier alternate-DNS experiment is superseded and must not be installed.

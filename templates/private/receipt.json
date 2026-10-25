@@ -1,0 +1,14 @@
+{
+  "supersedes": "private-hotfix-pack.zip; DO NOT INSTALL the alternate-DNS build",
+  "runtime_commit": "72af6bb9584bec6348ec08863442699fb1c39f80",
+  "release_directory": "2.0.0",
+  "source_sha256": "e30eab6f583b65f7379d10ec180ad79f4ba1797fb2582c157579b1e2c31d6c58",
+  "manifest_sha256": "50536751e621c149e3caf8ff9ed0d578aed177816d93920de92c51cbb9585807",
+  "scope": "Private new account setup. Original reviewed runtime unchanged; media recovery uses only platform-supported normal network transport. No public template publication or email sending.",
+  "skills": {
+    "kindle-courier-getting-started.body.md": "d7bb3f7375f851215502f86ad3e7fb3dda49f3011f885fbf4f4c3c680b6b183c",
+    "kindle-courier-install.body.md": "3f7bba9273b3535601e8229b099b09a29c8288460ae398c4709652e99142ab04",
+    "kindle-video-build.body.md": "2a1b115076976b4edfabe63bc2b160ee0db01d9ea970f4c74e0e0db3b803b562",
+    "kindle-epub-build.body.md": "102ab4922c675c11ab6daec96536c5d7a4336660ba5ec435d8ea4dc3c3500580"
+  }
+}

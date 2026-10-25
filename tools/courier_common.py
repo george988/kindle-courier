@@ -100,81 +100,20 @@ def check_url(u):
 
 class FetchError(Exception): pass
 
-def _public_address(ip):
-  return (ip.is_global and not (ip.is_private or ip.is_loopback or ip.is_link_local
-          or ip.is_multicast or ip.is_reserved or ip.is_unspecified))
-
-def _doh_public_addresses(host):
-  """Resolve synthetic DNS through fixed-IP, certificate-verified Cloudflare DoH.
-  No system DNS bootstrap, proxy environment, redirects, credentials, or private-IP exception.
-  Validate both A and AAAA answers; the caller still pins the actual HTTP connection.
-  """
-  import http.client, ipaddress, ssl
-  from urllib.parse import urlencode
-  try:
-    name = host.rstrip('.').encode('idna').decode('ascii').lower()
-    if len(name) > 253 or not all(re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', x) for x in name.split('.')):
-      raise ValueError('invalid DNS name')
-    try: ipaddress.ip_address(name)
-    except ValueError: pass
-    else: raise ValueError('IP literals cannot use alternate DNS')
-  except (AttributeError, UnicodeError, ValueError) as e:
-    raise FetchError(f'alternate DNS refused for {host!r}: {e}') from e
-  addresses = []
-  for qtype in (1, 28):
-    conn = http.client.HTTPSConnection('1.1.1.1', 443, timeout=10, context=ssl.create_default_context())
-    try:
-      conn.request('GET', '/dns-query?' + urlencode({'name': name, 'type': qtype}),
-                   headers={'Accept': 'application/dns-json', 'User-Agent': 'KindleCourier'})
-      response = conn.getresponse()
-      if response.status != 200: raise FetchError(f'alternate DNS HTTP {response.status} for {name}')
-      if (response.getheader('Content-Type') or '').split(';')[0].strip().lower() not in ('application/dns-json', 'application/json'):
-        raise FetchError('alternate DNS returned a non-JSON content type')
-      raw = response.read(65537)
-      if len(raw) > 65536: raise FetchError('alternate DNS response too large')
-      doc = json.loads(raw)
-      if not isinstance(doc, dict) or doc.get('Status') != 0 or doc.get('TC') is not False:
-        raise FetchError('alternate DNS response failed or was truncated')
-      question = doc.get('Question')
-      if (not isinstance(question, list) or len(question) != 1 or not isinstance(question[0], dict)
-          or question[0].get('name', '').rstrip('.').lower() != name or question[0].get('type') != qtype):
-        raise FetchError('alternate DNS question mismatch')
-      answers = doc.get('Answer', [])
-      if not isinstance(answers, list): raise FetchError('alternate DNS malformed answers')
-      for answer in answers:
-        if not isinstance(answer, dict): raise FetchError('alternate DNS malformed record')
-        kind = answer.get('type')
-        if kind == 5: continue  # CNAME; HTTPS still verifies the original destination hostname.
-        if kind != qtype: raise FetchError('alternate DNS unexpected record type')
-        ip = ipaddress.ip_address(answer.get('data', ''))
-        if (qtype == 1 and ip.version != 4) or (qtype == 28 and ip.version != 6) or not _public_address(ip):
-          raise FetchError(f'alternate DNS returned non-public/invalid address for {name}: {ip}')
-        if str(ip) not in addresses: addresses.append(str(ip))
-    except FetchError: raise
-    except (OSError, http.client.HTTPException, ValueError, TypeError, AttributeError) as e:
-      raise FetchError(f'alternate DNS failed for {name}: {e}') from e
-    finally: conn.close()
-  if not addresses: raise FetchError(f'alternate DNS returned no public address for {name}')
-  return addresses
-
 def resolve_vetted(host, port):
   """Resolve once and return one vetted IP. Every address must be public (no loopback/private/link-local/metadata),
   unless KC_ALLOW_PRIVATE_FETCH is set (tests only; recorded in job.json)."""
   import ipaddress, socket
   try: infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
   except socket.gaierror as e: raise FetchError(f'DNS resolution failed for {host}: {e}')
-  ips = [ipaddress.ip_address(i[4][0].split('%')[0]) for i in infos]
-  if not ips: raise FetchError(f'DNS returned no address for {host}')
-  synthetic = ipaddress.ip_network('198.18.0.0/15')
-  # Grok Bot's egress DNS returns only benchmark addresses for public names.
-  # Never connect to these addresses: recover real DNS and retain public-IP pinning.
-  # Mixed answers and all other non-public ranges continue to fail closed.
-  if not os.environ.get('KC_ALLOW_PRIVATE_FETCH') and all(ip.version == 4 and ip in synthetic for ip in ips):
-    return _doh_public_addresses(host)[0]
-  for ip in ips:
-    if not os.environ.get('KC_ALLOW_PRIVATE_FETCH') and not _public_address(ip):
+  ips = []
+  for i in infos:
+    ip = ipaddress.ip_address(i[4][0].split('%')[0])
+    if not os.environ.get('KC_ALLOW_PRIVATE_FETCH') and (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_multicast or ip.is_reserved or ip.is_unspecified):
       raise FetchError(f'non-public address refused: {host} -> {ip}')
-  return str(ips[0])
+    ips.append(str(ip))
+  if not ips: raise FetchError(f'DNS returned no address for {host}')
+  return ips[0]
 
 def safe_fetch(url, max_bytes=40 * 1024 * 1024, max_hops=5, timeout=60, headers=None):
   """GET with an SSRF guard: http(s) only; every hop (redirects are followed by hand) is re-validated; the connection

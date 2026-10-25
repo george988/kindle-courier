@@ -2,19 +2,17 @@
 
 Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
-## Unreleased — image recovery hotfix
+## Unreleased — proxy-compatible image recovery
 
-### Fixed
-- Recover public destinations when the Grok Bot environment returns synthetic DNS addresses in `198.18.0.0/15`. Resolve through a fixed, certificate-verified DNS-over-HTTPS endpoint, require public A/AAAA answers, and preserve pinned connections and redirect validation.
-- Continue refusing private, loopback, link-local, shared-address and mixed DNS answers. Fail closed on resolver errors, redirects, malformed responses or private answers; never enable the private-fetch override.
-- Require source-image inventory reconciliation before building self-authored thread HTML. Recover available media before using the explicitly text-only X Article JSON fallback.
+### Changed
+- Recover public images through the platform's supported normal-network downloader/browser, then validate and embed local assets using the existing builder.
+- Record source URL, local filename, byte count, dimensions, hash and source placement. Reconcile source inventory, parsed HTML, manifest and EPUB instead of counting lines or assuming remote images were embedded.
+- Attempt supported recovery before asking the owner to accept missing images; retain genuine video/OCR and unavailable-content holds.
+- Keep every runtime tool, network guard and checksum byte-identical to the audited 2.0.0 source. Private setup bodies and hashes are tracked under `templates/private`; public template unchanged.
 
-### Verification
-- Added 14 offline resolver, redirect and image-decode regression tests.
-- Independently reproduced the original synthetic-DNS failure and recovered all 15 reported images with the patch under simulated synthetic DNS; hashes match normal downloads.
-- Verified in the real Grok Bot environment: all 14 new tests passed and all 15 unique source assets downloaded without the private-fetch override. The existing suite passed 33/34 initially; its sole checksum-related failure passed when rerun with the updated manifest.
-- Independently inspected both rebuilt EPUBs: the article contains all 13 body images plus its cover; the Jason thread contains its photo. Both have zero EPUBCheck errors or warnings. The article still correctly requires review for three omitted videos and machine OCR.
-- Public template remains pinned to the published 2.0.0 commit until a separately reviewed publication.
+### Superseded experiment
+- Removed the alternate-DNS code and its tests after the new account's review identified that direct address resolution could bypass its network proxy. Earlier image-recovery tests verified output but did not establish acceptable routing. Do not install the `2.0.0-mediafix` experiment from earlier commits.
+- Proxy-compatible fresh-account installation and EPUB verification are in progress.
 
 ## 2.0.0 - 2026-10-24
 
