@@ -1,6 +1,6 @@
 {
   "release": "2.0.1",
-  "runtime_commit": "90c2fa298843f8a5c5d619b2a90754674d619066",
+  "runtime_commit": "bfa447b8dab60eef49472ca5019198a3ae7efa71",
   "release_directory": "2.0.1",
   "api_compatibility_version": "2.0.0",
   "manifest_sha256": "df03e6204a62aed3f455e73db9c023ac7ab8ebbd076ee5fd1bd1c793b9a569cf",
@@ -8,8 +8,8 @@
   "scope": "Public 2.0.1 candidate with page-fetch provenance and final-artifact review receipts. Runtime tools unchanged from the verified 2.0.1 deployment. No private state.",
   "skills": {
     "kindle-courier-getting-started.body.md": "a4b547e8bc0f40ce6f7d3dfc9e38f2501215285a02e07ae8754dc291d4faa764",
-    "kindle-courier-install.body.md": "5dd6267acd9ec42f466b73b9016194fb00024ba2b6ca5fe17c462eb556ccb16e",
-    "kindle-epub-build.body.md": "0534a5835ebac01071654a45085bde4d85b09c04337e0572ca1168a6f49b765b",
+    "kindle-courier-install.body.md": "93348c2f5eb5d02de9a82a63c1d4d3cbe47b7a0c57188d81439111118d8cab4a",
+    "kindle-epub-build.body.md": "1a9a7b9ef7b5d41b62edc276fe52944eced6a21fbb22d04d0ff78636fa2133aa",
     "kindle-video-build.body.md": "7395e83b493edf9d74dfd55af8a73458de6c548a07aa6cbb5b5a0240196bb3ac"
   },
   "workflow_revision": "2026-10-25-review-closure"

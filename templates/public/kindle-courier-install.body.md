@@ -11,7 +11,7 @@ Any line starting with REFUSED means stop and tell the owner. Never edit the pin
 <!-- kc:install -->
 ```bash
 set -euo pipefail
-KC_COMMIT=90c2fa298843f8a5c5d619b2a90754674d619066
+KC_COMMIT=bfa447b8dab60eef49472ca5019198a3ae7efa71
 KC_URL="https://raw.githubusercontent.com/george988/kindle-courier/$KC_COMMIT"
 B="${KINDLE_BASE:-/workspace/kindle}"; export KINDLE_BASE="$B"
 die(){ echo "REFUSED (Kindle Courier install): $*" >&2; exit 3; }
@@ -40,7 +40,7 @@ ee020e8aa4f837855cc7da1791614bc3536a8491f7da0deb7b32c4a08758a90b  tools/verify_l
 5c0b0b779c4709d4e8dcd264eb78bed62efb5e6ede4c06c14d5bd1466b028bae  tools/video2epub.py
 df03e6204a62aed3f455e73db9c023ac7ab8ebbd076ee5fd1bd1c793b9a569cf  SHA256SUMS
 5d2d9600ae69249b43f022055d119af9bca8470af26374e759cf9337abf8b63e  skills/kindle-courier-getting-started/SKILL.md
-52d95618ff715942e4a96be6799f9535cbc85f95e9b1d7eaf0f984f63b90e729  skills/kindle-epub-build/SKILL.md
+6325745ec8f9996543f3136349ba823c440f3f760fb28a308071b4824b77bcd5  skills/kindle-epub-build/SKILL.md
 20ef2dff67563d6d6afcf1a1a20592687710a04b9b166a6aada8e9263dd22dba  skills/kindle-video-build/SKILL.md
 PINS
 [ "$(wc -l < "$W/pins")" = 24 ] || die "pin list damaged"

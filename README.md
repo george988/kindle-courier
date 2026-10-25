@@ -59,7 +59,7 @@ The installer downloads **24 files** from a fixed GitHub commit: 20 tool files, 
 
 The supported runtime is **CPython 3.13 on Linux x86_64**. Setup requires network access to GitHub and dependency sources, plus permission to install the required runtime components. Pandoc 3.5 and EPUBCheck 5.1.0 are hash-pinned; Python packages use hash-locked requirements. System packages and the Playwright browser download are not fully pinned.
 
-The default bot workspace is `/workspace/kindle`; `KINDLE_BASE` can select a different base. This release is not a supported native macOS or Windows installation.
+The default bot workspace is `/workspace/kindle`; `KINDLE_BASE` can select a different base. This release is not a supported native macOS or Windows installation. Release directory labels must match `X.Y.Z` or `X.Y.Z-suffix`; the staging helper permits one optional suffix, not multiple hyphen-separated suffixes.
 
 ## Repository layout
 
@@ -108,7 +108,7 @@ Hash checks and EPUBCheck cannot establish whether a diagram is meaningful or le
 
 ## Reviewed 2.0.1 bundle
 
-The four compact bodies, listing and hashes are in [templates/public](templates/public). The installer pins source `90c2fa298843f8a5c5d619b2a90754674d619066` and verifies all 24 files. Runtime code matches the verified 2.0.1 deployment; the revised workflow adds page provenance and final-artifact evidence without replacing immutable tool releases. Historical private bodies remain under [templates/private](templates/private) for audit and coordinated rollback only.
+The four compact bodies, listing and hashes are in [templates/public](templates/public). The installer pins source `bfa447b8dab60eef49472ca5019198a3ae7efa71` and verifies all 24 files. Runtime code matches the verified 2.0.1 deployment; the revised workflow adds page provenance and final-artifact evidence without replacing immutable tool releases. Historical private bodies remain under [templates/private](templates/private) for audit and coordinated rollback only.
 
 Existing installations should explicitly run the updated installer and load all four matching skills when upgrading. Preserve recipient configuration and delivery history. Never overwrite an existing immutable release directory.
 
