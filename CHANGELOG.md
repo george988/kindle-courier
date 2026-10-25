@@ -10,7 +10,9 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 - Bind image review to exact embedded-image SHA256 values, record native/embedded sizes, reject uniform blank images and retain body-image resolution up to 40 million pixels.
 - Fix job-file `ocr` settings being masked by the command-line parser's default; reject invalid job OCR values.
 - Track this private runtime as `2.0.0-ocrpolicy1`; API version stays 2.0.0 and job identity includes exact tool hashes. Public x.ai template remains at the published source until separately updated.
-- Added 15 regression tests using real Pandoc and a mocked EPUBCheck; live validation evidence is recorded separately.
+- Added 15 regression tests using real Pandoc and a mocked EPUBCheck; all passed locally and remotely. Independent review passed 28 adversarial cases. Two real article rebuilds retained all sections/images without supplementary OCR and passed EPUBCheck 5.1.0 with zero fatal errors, errors or warnings.
+- Verified private live installation and exact saved skill bodies; fresh/repeat installs passed and tampered input was refused. Moved four stale transferred skill copies intact to backup and confirmed a fresh catalog load no longer lists them. No emails were sent, and existing delivery history, owner holds and book files were preserved.
+- Visual readability still requires actual bot inspection. Rebuilt content has a new digest, so source/history checks remain necessary before any resend. Historical video-skill metadata remains a cleanup item for the next public release.
 
 ### Changed
 - Recover public images through the platform's supported normal-network downloader/browser, then validate and embed local assets using the existing builder.
