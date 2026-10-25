@@ -2,7 +2,9 @@
 
 Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
-## 2.0.1 — publication pending
+## 2.0.1 — 2026-10-25
+
+Published as a [new public Grok Bot template](https://x.ai/bot/XQWWJOzqzWz3ksBfQ8lz0). It supersedes the 2.0.0 URL; see the [publication record](docs/publication-2.0.1.md).
 
 ### Fixed
 - Preserve readable original diagrams and captions without adding supplementary OCR by default. The bot performs visual checks and binds them to the embedded image hashes; missing, corrupt or unreadable content still holds.
@@ -18,7 +20,7 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 - Explicitly distinguish workflow evidence checks from runtime-enforced delivery/image gates, and document a concrete unique inspection-archive path with exclusive creation.
 - Revised workflow verification passed: 15/15 sections, 13/13 images, OCR off; a targeted two-pass rebuild retained its inspection EPUB and matched all final evidence hashes. All four saved skills match the pinned bundle, and the final installer rerun preserved runtime/configuration/history.
 - Repair the obsolete uniform positive-image test fixture in a maintained copy; preserve blank-image rejection and the original archived release. Both targeted cases pass.
-- All known actionable source/workflow review findings are closed; see [review closure](docs/review-closure-2.0.1.md). Public publication remains paused for the external template-association blocker.
+- All known actionable source/workflow review findings are closed; see [review closure](docs/review-closure-2.0.1.md). Publication proceeded through a new publisher bot after the old template association failed.
 
 ### Release packaging
 - Add all four compact public skill bodies, the listing and a hash receipt under `templates/public`.
@@ -27,7 +29,8 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 - Runtime builder code is byte-identical to the verified private OCR policy patch. Private validation passed 15 regressions and 28 independent cases; two complete real articles passed EPUBCheck 5.1.0 with no fatal errors, errors or warnings.
 - Live delivery passed with a new diagram-rich article: 20/20 sections, 8/8 original diagrams, no supplementary OCR, no owner approval prompt, real EPUBCheck zero errors/warnings, and one verified Sent attachment matching the book. Device arrival is pending owner confirmation.
 - Independent public-installer review passed fresh/repeat installation and two tamper-refusal cases. Live 2.0.1 installation verified all 24 pins and four saved skill bodies while preserving recipient configuration and delivery history.
-- Public publication is blocked: the transferred bot’s host-managed template association returns “Grok Bot template not found.” No draft or replacement template was created. The existing public URL remains on 2.0.0; update it from the original publishing bot/account or restore the association before publication.
+- Verified an identical second revision publishes to the same new URL. A post-publication install from the exact staging arguments verified all 24 files in an empty test base; local evidence checks confirmed unchanged live state. A full public-template import was not performed.
+- Published a new template under the current account after the transferred bot’s host-managed association returned “Grok Bot template not found.” The old URL remains a superseded 2.0.0 release; recovering it is optional.
 
 ## Private validation history — OCR policy and proxy-compatible image recovery
 
@@ -53,7 +56,7 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
 ## 2.0.0 - 2026-10-24
 
-Published to the [public Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) using reviewed source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
+Published to the [now-superseded 2.0.0 Grok Bot template](https://x.ai/bot/LXZMn9iFYykfjhOdwffV6) using reviewed source commit [`72af6bb9584bec6348ec08863442699fb1c39f80`](https://github.com/george988/kindle-courier/commit/72af6bb9584bec6348ec08863442699fb1c39f80).
 
 ### Public listing
 
@@ -128,7 +131,7 @@ Public description:
 
 ### Release provenance
 
-The reviewed RC1 tool bytes were activated and published as 2.0.0 without modification. At the published 2.0.0 source commit, `tools/VERSION` reads `2.0.0-rc1 CANDIDATE`. This is historical provenance; the current 2.0.1 candidate uses its own label and checksum below in `templates/public/receipt.json`.
+The reviewed RC1 tool bytes were activated and published as 2.0.0 without modification. At the published 2.0.0 source commit, `tools/VERSION` reads `2.0.0-rc1 CANDIDATE`. This is historical provenance; the current 2.0.1 release uses its own label and checksum below in `templates/public/receipt.json`.
 
 The historical 2.0.0 tool checksum-manifest SHA-256 is:
 

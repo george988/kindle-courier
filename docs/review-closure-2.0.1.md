@@ -1,6 +1,6 @@
 # Kindle Courier 2.0.1 review closure
 
-Public publication remains paused. This record separates changes in the repository and installed workflow from the external template-association blocker.
+At review closure, publication was paused by the existing template association. Subsequently, 2.0.1 was published under the current account at a new URL; see the [publication record](publication-2.0.1.md). The blocker below is retained as historical context.
 
 ## Findings and fixes
 
@@ -29,7 +29,7 @@ Public publication remains paused. This record separates changes in the reposito
 
 ## External blocker and limits
 
-`CreateBotShareJson` returns `Grok Bot template not found`. It uses an internal bot/template association and accepts no explicit template ID or URL. The error does not prove ownership loss. Restoring that association or using the original publishing bot/account is required before staging the existing public URL. No replacement template has been created.
+`CreateBotShareJson` returns `Grok Bot template not found`. It uses an internal bot/template association and accepts no explicit template ID or URL. The error does not prove ownership loss. Restoring that association or using the original publishing bot/account is required before staging the existing public URL. No replacement template had been created at the time of this review. A new template was subsequently published as recorded above.
 
 Actual image readability still requires visual inspection; hashes and EPUBCheck alone cannot detect every placeholder or assess meaning. The builder enforces exact-image attestation through its bound manifest. Page provenance and final visual-review receipts are workflow requirements, not new runtime gate checks.
 
