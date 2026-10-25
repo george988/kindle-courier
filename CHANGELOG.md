@@ -2,13 +2,21 @@
 
 Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 
-## Unreleased — proxy-compatible image recovery
+## Unreleased — OCR policy and proxy-compatible image recovery
+
+### OCR policy correction (2026-10-25; private deployment)
+- Preserve original diagrams and source captions by default without adding supplementary OCR. Require the bot to inspect embedded images for readability; record its attestation in the job and bound manifest rather than asking the owner about optional OCR.
+- Keep missing/corrupt/unreadable images, omitted content, explicit transcription requests and all existing delivery checks blocking. Historical sends and explicit owner holds are unchanged.
+- Bind image review to exact embedded-image SHA256 values, record native/embedded sizes, reject uniform blank images and retain body-image resolution up to 40 million pixels.
+- Fix job-file `ocr` settings being masked by the command-line parser's default; reject invalid job OCR values.
+- Track this private runtime as `2.0.0-ocr-policy1`; API version stays 2.0.0 and job identity includes exact tool hashes. Public x.ai template remains at the published source until separately updated.
+- Added 15 regression tests using real Pandoc and a mocked EPUBCheck; live validation evidence is recorded separately.
 
 ### Changed
 - Recover public images through the platform's supported normal-network downloader/browser, then validate and embed local assets using the existing builder.
 - Record source URL, local filename, byte count, dimensions, hash and source placement. Reconcile source inventory, parsed HTML, manifest and EPUB instead of counting lines or assuming remote images were embedded.
 - Attempt supported recovery before asking the owner to accept missing images; retain genuine video/OCR and unavailable-content holds.
-- Keep every runtime tool, network guard and checksum byte-identical to the audited 2.0.0 source. Private setup bodies and hashes are tracked under `templates/private`; public template unchanged.
+- The original media-recovery change kept runtime bytes unchanged; the subsequent private OCR policy patch below changes only the article builder and variant label. Network and delivery tools remain unchanged. Private setup bodies and hashes are tracked under `templates/private`; public template unchanged.
 
 ### Superseded experiment
 - Removed the alternate-DNS code and its tests after the new account's review identified that direct address resolution could bypass its network proxy. Earlier image-recovery tests verified output but did not establish acceptable routing. Do not install the `2.0.0-mediafix` experiment from earlier commits.

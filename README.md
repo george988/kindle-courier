@@ -96,4 +96,10 @@ A GitHub documentation edit alone does not update the published template. The 2.
 
 In Grok Bot, public hostnames may resolve to a synthetic network-proxy address that the strict tool downloader refuses. The revised private workflow uses the platform's supported normal-network download path, validates and inventories the returned images, then supplies local assets to the existing builder. All original runtime tools and their checksum manifest remain unchanged. Missing media and other completeness warnings remain review conditions.
 
-The four reviewed private setup bodies and their hashes are in [templates/private](templates/private). Its installer pins the original audited runtime commit `72af6bb9584bec6348ec08863442699fb1c39f80`; only the EPUB workflow differs from the public template. Public publication is separate. The earlier alternate-DNS experiment is superseded and must not be installed.
+The four reviewed private setup bodies and their hashes are in [templates/private](templates/private). Its installer pins the private reviewed OCR policy patch; the published template still pins the original audited runtime commit `72af6bb9584bec6348ec08863442699fb1c39f80`. Public publication is separate. The earlier alternate-DNS experiment is superseded and must not be installed.
+
+## Private OCR policy correction
+
+The private `2.0.0-ocr-policy1` runtime preserves original diagrams and source captions without adding OCR by default. Kindle Courier visually checks embedded images, records `images_reviewed: true` for readable originals, and rebuilds without asking the owner to approve absent optional OCR. Missing, corrupt or unreadable images and omitted source content still hold. Explicit `ocr: "auto"` remains opt-in and reviewed. The CLI/API reports 2.0.0 for compatibility; `tools/VERSION`, the manifest's `ocr_policy`, release directory and exact tool hashes identify this patch.
+
+This source change does not itself update the public x.ai template. The private installer is pinned to the reviewed patch commit. Run the focused regressions with `python -m unittest discover -s tests -p test_ocr_policy.py -v` (Pandoc required; EPUBCheck mocked only in these tests).

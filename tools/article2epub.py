@@ -153,10 +153,14 @@ def fetch_img(fetcher, url, wd, stem, is_cover=False):
     data = fetcher.get(url)
     from PIL import Image
     im = Image.open(io.BytesIO(data)); size = im.size
+    if im.width * im.height > 40000000: return None, 'image exceeds 40 million pixels', size
     if not is_cover and (im.width < 80 or im.height < 50): return None, f'too small ({im.width}x{im.height})', size
+    if not is_cover and all(lo == hi for lo, hi in im.convert('RGB').getextrema()):
+      return None, 'blank uniform image; recover the source diagram', size
     png = im.mode in ('RGBA', 'LA', 'P') and im.format == 'PNG'
     fn = stem + ('.png' if png else '.jpg'); im = im if png else im.convert('RGB')
-    if max(im.size) > 1600: im.thumbnail((1600, 1600))
+    # Body diagrams retain their resolution; a tall screenshot must not shrink to illegible text.
+    if is_cover and max(im.size) > 1600: im.thumbnail((1600, 1600))
     im.save(os.path.join(wd, fn), quality=85); return fn, 'embedded', size
   except Exception as e: return None, f'fetch/decode failed: {e}', None
 
@@ -202,7 +206,12 @@ def clean(frag, base_url, wd, fetcher, title, rep):
     full = src if re.match(r'^(https?|file|kc-missing|kc-outside):', src) else urljoin(base_url, src) if re.match('https?://', base_url) else 'kc-missing:' + src
     fn, why, size = fetch_img(fetcher, full, wd, f'img/fig{n + 1:02d}')
     if fn:
-      n += 1; img['src'] = fn; rep['images'].append({'src': full, 'status': 'embedded', 'file': fn})
+      from PIL import Image
+      n += 1; img['src'] = fn
+      with Image.open(os.path.join(wd, fn)) as embedded: embedded_size = list(embedded.size)
+      rep['images'].append({'src': full, 'status': 'embedded', 'file': fn,
+                            'sha256': C.sha256_file(os.path.join(wd, fn)),
+                            'native_size': list(size), 'embedded_size': embedded_size})
     elif why.startswith('too small'):
       dec, dwhy = decorative(size[0], size[1], img)
       rep['images'].append({'src': full, 'status': 'dropped', 'classification': 'decorative' if dec else 'content', 'reason': dwhy or why})
@@ -326,7 +335,7 @@ def para_keys(html_frag):
   s = BeautifulSoup(html_frag, 'lxml')
   return [C.norm_text(p.get_text(' ')) for p in s.find_all(['p', 'li', 'pre', 'h2', 'h3', 'h4']) if len(C.norm_text(p.get_text(' '))) >= 12]
 
-BOOL = ('no_cover', 'browser', 'trusted_html', 'force', 'force_reflow', 'keep_work')
+BOOL = ('no_cover', 'browser', 'trusted_html', 'force', 'force_reflow', 'keep_work', 'images_reviewed')
 INT = ('expect_posts', 'expect_images')
 def load_job(a):
   """Job file values fill unset options; types are validated (a string forbid becomes a one-item list)."""
@@ -337,9 +346,11 @@ def load_job(a):
     k2 = k.replace('-', '_')
     if k2 == 'forbid': v = [v] if isinstance(v, str) else v
     if k2 == 'forbid' and not (isinstance(v, list) and all(isinstance(x, str) for x in v)): die('job forbid must be a string or list of strings')
+    elif k2 == 'image_review_sha256' and not (isinstance(v, list) and all(isinstance(x, str) and re.fullmatch(r'[0-9a-f]{64}', x) for x in v)):
+      die('job image_review_sha256 must be a list of lowercase SHA256 hashes')
     elif k2 in BOOL and not isinstance(v, bool): die(f'job {k} must be true/false')
     elif k2 in INT and not (isinstance(v, int) and not isinstance(v, bool)): die(f'job {k} must be an integer')
-    elif k2 not in BOOL + INT + ('forbid',) and v is not None and not isinstance(v, str): die(f'job {k} must be a string')
+    elif k2 not in BOOL + INT + ('forbid', 'image_review_sha256') and v is not None and not isinstance(v, str): die(f'job {k} must be a string')
     if not hasattr(a, k2): die(f'unknown job key {k}')
     if getattr(a, k2, None) in (None, False, [], 0): setattr(a, k2, v)
   return a
@@ -366,13 +377,22 @@ def main(argv=None):
   ap.add_argument('--trusted-html', action='store_true', help='--html is self-built (thread/PDF text): skip readability')
   ap.add_argument('--expect-posts', type=int, default=0, help='posts the HTML should contain (elements with class kc-post)')
   ap.add_argument('--expect-images', type=int, default=0)
-  ap.add_argument('--ocr', choices=['auto', 'off'], default='auto')
+  ap.add_argument('--ocr', choices=['auto', 'off'], default=None,
+                  help='off (default): preserve original images; auto: add optional OCR, held for review')
+  ap.add_argument('--images-reviewed', action='store_true',
+                  help='attest all embedded source images were visually checked for readability and completeness')
+  ap.add_argument('--image-review-sha256', action='append', default=[],
+                  help='exact embedded-image SHA256 from the inspected manifest (repeat once per image)')
   ap.add_argument('--force', action='store_true', help='replace an existing --out built from a different job')
   ap.add_argument('--forbid', action='append', default=[], help='DEPRECATED: checked only against title/author/byline, word-bounded')
   ap.add_argument('--keep-work', action='store_true')
   wd = None; tmp_out = None; lockfd = None; a = None
   try:
     a = load_job(ap.parse_args(argv))
+    # Resolve the default after loading the job: an argparse default otherwise masks its OCR choice.
+    if a.ocr is None: a.ocr = 'off'
+    if a.ocr not in ('auto', 'off'): die('job ocr must be auto or off')
+    if any(not re.fullmatch(r'[0-9a-f]{64}', x) for x in a.image_review_sha256): die('invalid image review SHA256')
     if a.version: print('article2epub', C.VERSION); return 0
     miss = [k for k in ('title', 'author', 'date', 'source_url', 'lang', 'out') if not getattr(a, k)]
     if miss: die('missing required values: ' + ', '.join(miss))
@@ -388,7 +408,8 @@ def main(argv=None):
     if not out.endswith('.epub') or out.endswith('.needs-review.epub'): die('--out must end in .epub (not .needs-review.epub)')
     os.makedirs(os.path.dirname(out), exist_ok=True)
     opts = {'kind_hint': 'url' if a.url else 'html' if a.html else 'pdf' if a.from_pdf else 'json', 'cover': a.cover or '', 'no_cover': a.no_cover,
-            'ocr': a.ocr, 'expect_posts': a.expect_posts, 'expect_images': a.expect_images, 'trusted_html': a.trusted_html,
+            'ocr': a.ocr, 'images_reviewed': a.images_reviewed, 'image_review_sha256': sorted(a.image_review_sha256),
+            'expect_posts': a.expect_posts, 'expect_images': a.expect_images, 'trusted_html': a.trusted_html,
             'browser': a.browser, 'force_reflow': a.force_reflow}
     source_id = C.normalize_source(a.source_url)
     lockfd = lock_output(out)
@@ -451,8 +472,13 @@ def main(argv=None):
     wd = tempfile.mkdtemp(prefix=re.sub(r'\W+', '-', os.path.basename(out))[:40] + '-', dir=os.path.join(BASE, 'work'))
     fetcher = Fetcher(allowed)
     s, root, nimg = clean(body, a.source_url, wd, fetcher, title, rep)
-    if a.ocr == 'off' and root.find_all('img'): rep['ocr'] = 'off'; rep['review'].append('OCR turned off: images not checked for text')
-    elif a.ocr != 'off': add_ocr(s, root, wd, a.lang, rep)
+    image_hashes = sorted(i['sha256'] for i in rep['images'] if i['status'] == 'embedded')
+    images_verified = a.images_reviewed and sorted(a.image_review_sha256) == image_hashes
+    if root.find_all('img'):
+      if not images_verified:
+        rep['review'].append('source image readability not verified; inspect embedded images before sending')
+      if a.ocr == 'off': rep['ocr'] = 'off'
+      else: add_ocr(s, root, wd, a.lang, rep)
     body_html = root.decode_contents()
     cover = None; cover_kind = 'none'
     if not a.no_cover:
@@ -527,7 +553,9 @@ def main(argv=None):
       'raw_source': {'text_blocks': len(raw['blocks']), 'images': raw['images'], 'embeds': raw['embeds'], 'dropped_text_blocks': len(dropped_blocks)},
       'sections': {'expected': len(exp_sections), 'included': len(sec_inc)},
       'posts': {'expected': expected_posts or len(post_keys), 'included': posts_inc, 'embedded_previews': posts_embedded},
-      'images': {'expected': max(raw['images'], a.expect_images), 'embedded': img_emb, 'decorative_skipped': img_dec, 'items': rep['images']},
+      'images': {'expected': max(raw['images'], a.expect_images), 'embedded': img_emb, 'decorative_skipped': img_dec,
+                 'readability_reviewed': images_verified, 'items': rep['images']},
+      'ocr_policy': 'original-images-v1',
       'ocr': rep['ocr'], 'dropped_duplicate_title_heading': rep['dropped_title_heading'], 'pdf_class': pdfclass,
       'failures': rep['failures'], 'omissions': rep['omissions'], 'review_reasons': rep['review'],
       'review_needed': bool(rep['review']), 'complete': status == 'complete', 'status': status, 'review': {'acknowledged': False}}

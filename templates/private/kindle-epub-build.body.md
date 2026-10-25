@@ -1,7 +1,7 @@
 # Kindle EPUB build (Kindle Courier 2.0.0)
 
 Base dir: `${KINDLE_BASE:-/workspace/kindle}` (below: `$B`). Tools are in `$B/tools/` (links into `$B/releases/current/tools`).
-Release identity: Kindle Courier 2.0.0 (rc1 audited build, tools/VERSION `2.0.0-rc1 CANDIDATE`, SHA256SUMS sha256 50536751e621c149e3caf8ff9ed0d578aed177816d93920de92c51cbb9585807).
+Release identity: private 2.0.0-ocr-policy1 (API version 2.0.0, tools/VERSION `2.0.0-ocr-policy1 PRIVATE`, SHA256SUMS sha256 db9ba8bb8e5fbe40785c34279c7a4be1bc6fd4044eb6916782404d21e980bb39).
 Tools: the 20 Kindle Courier 2.0.0 tools come from the verified release installed by kindle-courier-install (hash-pinned to SHA256SUMS); this skill no longer embeds them.
 The Kindle address and sending account come from memory or the owner, never from these files.
 
@@ -28,13 +28,13 @@ For more than one device, add one entry per address (one `default: true`) and re
 ## 1. Tools first, every run
 `bash "$B/tools/ensure_tools.sh"` (add `--video` for video). It checks the venv and pinned deps specifically (CPython 3.13, Linux x86_64,
 exact locked versions) and exits 1 on FAILED; stop then. If the tools are missing, run section 0 part 1 (kindle-courier-install) first.
-OPTIONAL-MISSING tesseract means images can't be OCR-checked, so such books are held for review.
+OPTIONAL-MISSING tesseract does not hold an original-image book. It matters only when the owner explicitly requests OCR transcription.
 
 ## 2. Build: always through a job file
 Titles, authors and URLs come from untrusted pages. Never put them inside a shell command (not even in double quotes).
 Write a JSON job file with a file-writing tool, then run `python3 "$B/tools/article2epub.py" --job /path/job.json`.
 Keys: `url` | `html` | `json` | `from_pdf`, `title`, `author` ("Name (@handle)"), `date` (YYYY-MM-DD), `source_url`, `lang`, `out` (`$B/<slug>.epub`),
-optional `cover`, `no_cover`, `browser` (JS pages), `trusted_html` (HTML you built yourself), `expect_posts`, `expect_images`.
+optional `cover`, `no_cover`, `browser` (JS pages), `trusted_html` (HTML you built yourself), `expect_posts`, `expect_images`, `ocr` (default `off`), `images_reviewed` (boolean), `image_review_sha256` (list of embedded-image SHA256 values).
 - X Article: `url` = the x.com link (rendered in headless Chrome: cover, images, code, embedded posts as previews). If rendering fails, recover available media URLs and full embedded posts from the source before choosing a fallback. Build HTML with the recovered images in their source sections, with `expect_images` and `expect_posts`. Use `json` only when richer recovery fails: it is text and code only, status `text_only`, and never preserves images. Report any remaining loss honestly.
 - Thread or regular post: write HTML yourself, one `<div class="kc-post">` per post (text as paragraphs, images, quoted post as a blockquote), images saved next to the HTML file and referenced by relative name, then `html` + `trusted_html: true` + `expect_posts: N`.
 - Before building self-authored HTML, reconcile the discovered content-image inventory with actual `<img>` tags, including every post of expanded threads and quoted posts. A plain URL or Markdown image inside HTML is not an embedded image. Set `expect_images` to the discovered body-image count, handle the real cover separately, and verify the manifest and EPUB contain each expected asset. Recover supported images before asking the owner to accept omissions; do not repeatedly ask while discoverable posts/media remain unexplored. Never treat failed downloads as decorative images.
@@ -52,7 +52,16 @@ Save each successful download under a fresh per-job input folder, alongside the 
 
 Write real <img src="assets/filename.jpg"> tags in their original source sections. Relative references must remain inside the HTML folder; do not use absolute paths, ../ escapes or symlinks. Preserve text, order, captions and quoted-post context. Put the real cover in the same input folder and pass its explicit local path as the job's cover. Use html + trusted_html: true only for HTML you constructed and checked, with source_url and accurate expect_posts/expect_images (body images exclude cover).
 
-Build through article2epub.py normally. Reconcile the source inventory, actual parsed HTML image tags, manifest and EPUB assets. Check every expected image is included in the correct section and every EPUB image reference resolves. A plain media URL or Markdown image is not an HTML image tag. Do not ask the owner to accept missing images while supported recovery remains untried. If recovery fails, report the actual reason and keep the hold; never suppress video, OCR or other legitimate review reasons. Existing delivery gates remain mandatory.
+Build through article2epub.py normally. Reconcile the source inventory, actual parsed HTML image tags, manifest and EPUB assets. Check every expected image is included in the correct section and every EPUB image reference resolves. A plain media URL or Markdown image is not an HTML image tag. Do not ask the owner to accept missing images while supported recovery remains untried. If recovery fails, report the actual reason and keep the hold; never suppress missing-content, requested-transcription or other legitimate review reasons. Existing delivery gates remain mandatory.
+
+### Original images and optional OCR
+Default to `ocr: "off"`: preserve every source diagram, image, original caption and alt text; do not add machine-transcribed prose. Optional OCR being absent is not missing source content. Do not use an old job's `ocr: "auto"` unless the owner explicitly requested transcription.
+
+Inspect the actual embedded images (including any resized versions), their source placement and captions before delivery. Check text/labels remain legible at a realistic Kindle reading scale/zoom, and that images are not blank, placeholders, cropped incorrectly or materially degraded. Image decoding and EPUBCheck alone do not prove readability. Record this check against the final artifact hash in the job's local evidence. If satisfactory, set `images_reviewed: true` and `image_review_sha256` to the SHA256 list from the inspected manifest (one entry per embedded image) in the job and rebuild; this attestation is part of the build identity and bound manifest. Never set it blindly. Missing or stale image hashes keep the book held. The manifest records native and embedded dimensions and each embedded file hash; body images retain full resolution within the 40-million-pixel limit. Uniform blank images fail automatically; other placeholders still require visual inspection. Verify the final embedded pixels are the ones inspected. Do this routine verification yourself; do not ask the owner merely because review has not yet been performed.
+
+If images are unreadable, first recover a better source image or improve its presentation. If unresolved, leave `images_reviewed` false and explain the actual problem. Missing/corrupt images, omitted sections/posts, unsupported embeds and other existing gates remain blocking even with `images_reviewed: true`. OCR must never substitute for a missing/unreadable original image or required source text. Scanned-PDF reflow and OCR-dependent accessibility requests remain held when required text is unreliable; uploaded PDF/EPUB/DOCX files still pass through unchanged by default.
+
+Use `ocr: "auto"` only when the owner explicitly asks for supplementary OCR. Such text remains clearly labelled and held for transcription review, including when OCR is unavailable or fails. Preserve authored source captions and text even if they contain the word OCR; never strip source material by keyword. To rebuild an old OCR-only hold, start from the source HTML/assets without the builder-added OCR blocks, use a new output path, and rerun validation. Do not promote an old manifest or edit its review reasons. Never resend a previously sent book, release an explicit owner hold, or change duplicate/delivery history as part of this policy fix.
 
 ## 3. Held books (exit 5)
 Tell the owner exactly what is missing (manifest `failures`, `omissions`, `review_reasons`: dropped images or sections, video,
