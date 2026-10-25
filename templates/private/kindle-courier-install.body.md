@@ -1,17 +1,17 @@
 # Kindle Courier 2.0.0: install the verified release
 
-Installs the audited Kindle Courier 2.0.0 release (tools/VERSION `2.0.0-rc1 CANDIDATE`) from the public repo
+Installs the private Kindle Courier 2.0.0-ocr-policy1 patch (tools/VERSION `2.0.0-ocr-policy1 PRIVATE`) from the public repo
 george988/kindle-courier, pinned to one commit. It downloads exactly 24 files (20 tools, SHA256SUMS, 3 reviewed skills),
 checks each against the sha256 written below, and runs nothing until all 24 verify. Then it runs the reviewed
 first-run block (kindle-epub-build section 0 part 1) from the downloaded skill: rebuild and verify the tools, stage, activate, ensure_tools.
 Run it before first use, after a box reset, or when `$B/tools/presend_gate.py` is missing. Rerunning is safe: a staged
-2.0.0 that verifies is never restaged. It never writes recipients or the ledger (kindle-courier-getting-started does, with the owner's addresses).
+2.0.0-ocr-policy1 that verifies is never restaged. It never writes recipients or the ledger (kindle-courier-getting-started does, with the owner's addresses).
 Any line starting with REFUSED means stop and tell the owner. Never edit the pins or skip a check.
 
 <!-- kc:install -->
 ```bash
 set -euo pipefail
-KC_COMMIT=72af6bb9584bec6348ec08863442699fb1c39f80
+KC_COMMIT=d764dd773e70b0bb9760de4b8af475b5fbf9ad88
 KC_URL="https://raw.githubusercontent.com/george988/kindle-courier/$KC_COMMIT"
 B="${KINDLE_BASE:-/workspace/kindle}"; export KINDLE_BASE="$B"
 die(){ echo "REFUSED (Kindle Courier install): $*" >&2; exit 3; }
@@ -19,9 +19,9 @@ die(){ echo "REFUSED (Kindle Courier install): $*" >&2; exit 3; }
 W="$(mktemp -d)"; trap 'rm -rf "$W"' EXIT; mkdir "$W/src"
 cat > "$W/pins" <<'PINS'
 b55b652ca3bc36e5d5e3da16b2b6dc211882b668f9d31ff86c61a5591e4778d0  tools/COURIER_FILES
-a7088790a3c05afa6d84b3d4c76ffb586553417542aa2747b61b288305691214  tools/VERSION
+6b540ceb3a4f69c84de1203fa20766b5d4261effec2875b8a77cc654e09e465e  tools/VERSION
 62c52b9b6df4d5d954682a23165e44b545b9443ad6a46a20e66f85286ae413f9  tools/activate.sh
-570f1196ff6b3bf95139a3b4aa2149f08784ef5575456230b3cc54dc3a2e7b13  tools/article2epub.py
+121c37e15fcb80691b431b4eda54772bc98d25fb8a2549129d205a7242911fd5  tools/article2epub.py
 e30eab6f583b65f7379d10ec180ad79f4ba1797fb2582c157579b1e2c31d6c58  tools/courier_common.py
 d53bdc27e28cef4f9acb0939f6481a0e97db6662033309854adb2f1c1473fefa  tools/deps.lock
 51af24dd583454bcbf5038150502b2a46051f7ca6255bc557df72eb9c88a4f00  tools/ensure_tools.sh
@@ -38,9 +38,9 @@ db505b23dc10ecc9f9b9a6aee75a86d21862101cbc63f6fa71d3ad3d1fb5aded  tools/stage_re
 00969408afe58afa257be8a306cdff6f331e1e5e2d7031b8a166816b8d0a329c  tools/system-packages.txt
 ee020e8aa4f837855cc7da1791614bc3536a8491f7da0deb7b32c4a08758a90b  tools/verify_lock.py
 5c0b0b779c4709d4e8dcd264eb78bed62efb5e6ede4c06c14d5bd1466b028bae  tools/video2epub.py
-50536751e621c149e3caf8ff9ed0d578aed177816d93920de92c51cbb9585807  SHA256SUMS
+db9ba8bb8e5fbe40785c34279c7a4be1bc6fd4044eb6916782404d21e980bb39  SHA256SUMS
 1a88001c2d65200c1ae6ee7c65741d7e270cd15619340a4fb291e4a7c29e2b33  skills/kindle-courier-getting-started/SKILL.md
-fdcee0a758ec11bb221c42be277ee2db3cb53d3e75f4b3e9c57922dcfaae9d06  skills/kindle-epub-build/SKILL.md
+f9af764a1e3c3b46b780270c0bac95949b3f9208e98bfd13b9775fa019da7f60  skills/kindle-epub-build/SKILL.md
 19e5a6887a5df744ccf8a9c07b9cfa06dd524586aede1a88e8a4c230310d491e  skills/kindle-video-build/SKILL.md
 PINS
 [ "$(wc -l < "$W/pins")" = 24 ] || die "pin list damaged"
@@ -62,8 +62,8 @@ L = open(sys.argv[1], encoding='utf-8').read().split('\n'); i = L.index('<!-- kc
 assert L[i + 1] == '```bash'; j = L.index('```', i + 2); open(sys.argv[2], 'w').write('\n'.join(L[i + 2:j]) + '\n')
 PY
 bash -eo pipefail "$W/part1.sh" || die "first-run block failed (see above)"
-(cd "$B/releases/2.0.0" && sha256sum -c --quiet SHA256SUMS) || die "installed release does not verify"
-for f in "$W"/src/tools/*; do cmp -s "$f" "$B/releases/2.0.0/tools/${f##*/}" || die "installed ${f##*/} differs from the pinned download"; done
-echo "Kindle Courier 2.0.0 installed and active ($(readlink "$B/releases/current")). Tool sha256:"; cat "$B/releases/2.0.0/SHA256SUMS"
+(cd "$B/releases/2.0.0-ocr-policy1" && sha256sum -c --quiet SHA256SUMS) || die "installed release does not verify"
+for f in "$W"/src/tools/*; do cmp -s "$f" "$B/releases/2.0.0-ocr-policy1/tools/${f##*/}" || die "installed ${f##*/} differs from the pinned download"; done
+echo "Kindle Courier 2.0.0 installed and active ($(readlink "$B/releases/current")). Tool sha256:"; cat "$B/releases/2.0.0-ocr-policy1/SHA256SUMS"
 ```
 For video, then run `bash "$B/tools/ensure_tools.sh" --video`.
