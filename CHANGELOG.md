@@ -9,7 +9,7 @@ Notable changes to Kindle Courier are recorded here. Dates use YYYY-MM-DD.
 - Keep missing/corrupt/unreadable images, omitted content, explicit transcription requests and all existing delivery checks blocking. Historical sends and explicit owner holds are unchanged.
 - Bind image review to exact embedded-image SHA256 values, record native/embedded sizes, reject uniform blank images and retain body-image resolution up to 40 million pixels.
 - Fix job-file `ocr` settings being masked by the command-line parser's default; reject invalid job OCR values.
-- Track this private runtime as `2.0.0-ocr-policy1`; API version stays 2.0.0 and job identity includes exact tool hashes. Public x.ai template remains at the published source until separately updated.
+- Track this private runtime as `2.0.0-ocrpolicy1`; API version stays 2.0.0 and job identity includes exact tool hashes. Public x.ai template remains at the published source until separately updated.
 - Added 15 regression tests using real Pandoc and a mocked EPUBCheck; live validation evidence is recorded separately.
 
 ### Changed

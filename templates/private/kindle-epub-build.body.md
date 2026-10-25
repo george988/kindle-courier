@@ -1,7 +1,7 @@
 # Kindle EPUB build (Kindle Courier 2.0.0)
 
 Base dir: `${KINDLE_BASE:-/workspace/kindle}` (below: `$B`). Tools are in `$B/tools/` (links into `$B/releases/current/tools`).
-Release identity: private 2.0.0-ocr-policy1 (API version 2.0.0, tools/VERSION `2.0.0-ocr-policy1 PRIVATE`, SHA256SUMS sha256 db9ba8bb8e5fbe40785c34279c7a4be1bc6fd4044eb6916782404d21e980bb39).
+Release identity: private 2.0.0-ocrpolicy1 (API version 2.0.0, tools/VERSION `2.0.0-ocrpolicy1 PRIVATE`, SHA256SUMS sha256 37602092cc42ad630caf14921fa6a3c9c264a72d246f78e9a22df8fd521ebed9).
 Tools: the 20 Kindle Courier 2.0.0 tools come from the verified release installed by kindle-courier-install (hash-pinned to SHA256SUMS); this skill no longer embeds them.
 The Kindle address and sending account come from memory or the owner, never from these files.
 
